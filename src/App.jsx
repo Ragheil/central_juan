@@ -10,8 +10,8 @@ function App() {
         <h1>React App with Login and Dashboard</h1>
 
         <Routes>
-          <Route path="/login.jsx" element={<Login />} />
-          <Route path="/dashboard.jsx" element={<Dashboard />} />
+          <Route path="/login" element={<Login />} /> {/* Removed .jsx */}
+          <Route path="/dashboard" element={<Dashboard />} /> {/* Removed .jsx */}
           <Route path="/" element={<Login />} /> {/* Default to Login */}
         </Routes>
       </div>

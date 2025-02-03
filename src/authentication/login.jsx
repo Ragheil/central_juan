@@ -4,37 +4,36 @@ import axios from 'axios';
 
 // Function to render the login page
 function Login() {
-  // State to store the username
+  // State to store the username and password
   const [username, setUsername] = useState('');
-  // State to store the password
   const [password, setPassword] = useState('');
   // Hook to navigate to different pages
   const navigate = useNavigate();
 
   // Function to handle the login
   const handleLogin = async (e) => {
-    // Prevent the default form submission
     e.preventDefault();
     try {
-      // Send a POST request to the backend to authenticate the user
       const response = await axios.post(
         'http://localhost/central_juan/backend/login.php',
         { username, password },
         { headers: { 'Content-Type': 'application/json' } }
       );
-      // Display the response message
+  
       alert(response.data.message);
-      // If the login is successful, navigate to the dashboard
+  
       if (response.data.message === 'Login successful') {
-        navigate('/dashboard');
+        localStorage.setItem('username', username);
+        localStorage.setItem('role', response.data.role);
+        navigate('/dashboard'); // Navigate to dashboard if login is successful
       }
     } catch (error) {
-      // Log any errors that occur during the login
       console.error('Error during login:', error);
-      // Display an error message
       alert('Server error or invalid credentials');
     }
   };
+  
+  
 
   // Render the login page
   return (

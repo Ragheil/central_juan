@@ -26,6 +26,7 @@ $data = json_decode(file_get_contents("php://input"), true);
 $user = $data['username'] ?? '';
 $pass = $data['password'] ?? '';
 
+// SQL query to fetch user data from the database
 $sql = "SELECT * FROM users WHERE username = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $user);
@@ -34,6 +35,8 @@ $result = $stmt->get_result();
 
 if ($result->num_rows > 0) {
     $row = $result->fetch_assoc();
+    
+    // Compare hashed passwords
     if ($row['password'] === md5($pass)) {
         echo json_encode(["message" => "Login successful", "role" => $row['role']]);
     } else {

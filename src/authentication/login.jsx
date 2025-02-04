@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import '../../frontend/authentication/login.css'; // Import the CSS file
 
 // Function to render the login page
 function Login() {
   // State to store the username and password
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false); // State to toggle password visibility
   // Hook to navigate to different pages
   const navigate = useNavigate();
 
@@ -32,8 +34,11 @@ function Login() {
       alert('Server error or invalid credentials');
     }
   };
-  
-  
+
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
 
   // Render the login page
   return (
@@ -49,14 +54,17 @@ function Login() {
             required
           />
         </div>
-        <div>
+        <div className="password-container">
           <label>Password:</label>
           <input
-            type="password"
+            type={passwordVisible ? 'text' : 'password'} // Toggle input type based on visibility
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <span className="eye-icon" onClick={togglePasswordVisibility}>
+            {passwordVisible ? '👁️' : '🙈'} {/* Simple eye icon for toggle */}
+          </span>
         </div>
         <button type="submit">Login</button>
       </form>

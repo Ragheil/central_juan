@@ -22,18 +22,20 @@ function Login() {
         { headers: { 'Content-Type': 'application/json' } }
       );
   
-      alert(response.data.message);
-  
       if (response.data.message === 'Login successful') {
         localStorage.setItem('username', username);
         localStorage.setItem('role', response.data.role);
         navigate('/dashboard'); // Navigate to dashboard if login is successful
+      } else {
+        // Show alert only for invalid credentials or error message
+        alert(response.data.message);
       }
     } catch (error) {
       console.error('Error during login:', error);
       alert('Server error or invalid credentials');
     }
   };
+  
 
   // Toggle password visibility
   const togglePasswordVisibility = () => {

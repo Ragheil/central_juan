@@ -43,31 +43,36 @@ function Login() {
   // Render the login page
   return (
     <div className="login-container">
-      <h1>Login Page</h1>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="password-container">
-          <label>Password:</label>
-          <input
-            type={passwordVisible ? 'text' : 'password'} // Toggle input type based on visibility
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <span className="eye-icon" onClick={togglePasswordVisibility}>
-            {passwordVisible ? '👁️' : '🙈'} {/* Simple eye icon for toggle */}
-          </span>
-        </div>
-        <button type="submit">Login</button>
-      </form>
+      <div className="logo-section">
+        <img src="../../frontend/images/central_logo.png" alt="Central Logo" className="logo" />
+      </div>
+      <div className="login-form-section">
+        <h1>Login</h1>
+        <form onSubmit={handleLogin}>
+          <div>
+            <label>Username:</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div className="password-container">
+            <label>Password:</label>
+            <input
+              type={passwordVisible ? 'text' : 'password'} // Toggle input type based on visibility
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <span className="eye-icon" onClick={togglePasswordVisibility}>
+              {passwordVisible ? '👁️' : '🙈'} {/* Simple eye icon for toggle */}
+            </span>
+          </div>
+          <button type="submit">Login</button>
+        </form>
+      </div>
     </div>
   );
 }

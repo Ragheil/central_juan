@@ -27,6 +27,13 @@ function Dashboard() {
 
   return (
     <div className="dashboard-container">
+      {/* Left Navigation */}
+      <div className="left-nav">
+        <Link to="/payroll">
+          <button> Payroll</button>
+        </Link>
+      </div>
+
       <div className="dashboard-card">
         <div className="dashboard-header">
           <h1>Welcome to the Dashboard</h1>
@@ -49,13 +56,13 @@ function Dashboard() {
         </div>
       </div>
 
-      {/* Right Navigation Menu */}
-      <div className="left-nav">
+      {/* Right Navigation 
+      <div className="right-nav">
         <ul>
           <li><Link to="/payroll">Payroll</Link></li>
-          {/* You can add more links here as needed */}
+          {/* You can add more links here as needed 
         </ul>
-      </div>
+      </div>*/}
 
       {/* Popup for logout confirmation */}
       {showPopup && (

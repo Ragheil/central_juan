@@ -34,6 +34,17 @@ function Payroll() {
     setIsModalOpen(true); // Open the modal
   };
 
+  function formatDateToWords(dateString) {
+    if (!dateString) return ''; // Handle empty or invalid dates
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  }
+  
+
   const handleCloseModal = () => {
     setIsModalOpen(false); // Close the modal
   };
@@ -91,24 +102,25 @@ function Payroll() {
           </tr>
         </thead>
         <tbody>
-          {employees.map((employee) => (
+        {employees.map((employee) => (
             <tr key={employee.emp_id}>
-              <td>{employee.emp_id}</td>
-              <td>{employee.firstname}</td>
-              <td>{employee.lastname}</td>
-              <td>{employee.contact_num}</td>
-              <td>{employee.address}</td>
-              <td>{employee.birthday}</td>
-              <td>{employee.gender}</td>
-              <td>{employee.position}</td>
-              <td>{employee.time_in}</td>
-              <td>{employee.time_out}</td>
-              <td>
+            <td>{employee.emp_id}</td>
+            <td>{employee.firstname}</td>
+            <td>{employee.lastname}</td>
+            <td>{employee.contact_num}</td>
+            <td>{employee.address}</td>
+            <td>{formatDateToWords(employee.birthday)}</td>
+            <td>{employee.gender}</td>
+            <td>{employee.position}</td>
+            <td>{employee.time_in}</td>
+            <td>{employee.time_out}</td>
+            <td>
                 <button onClick={() => handleEditClick(employee)}>Edit</button>
-              </td>
+            </td>
             </tr>
-          ))}
+        ))}
         </tbody>
+
       </table>
 
       {/* Modal for editing employee */}

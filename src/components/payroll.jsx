@@ -7,9 +7,9 @@ function Payroll() {
   const [loading, setLoading] = useState(true);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const POLL_INTERVAL_MS = 5000; // Poll every 5 seconds
+  const role = localStorage.getItem('role') || 'N/A';
+  const POLL_INTERVAL_MS = 5000;
 
-  // Fetch employee data with auto-refresh
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -30,7 +30,7 @@ function Payroll() {
     fetchEmployees();
     const interval = setInterval(fetchEmployees, POLL_INTERVAL_MS);
 
-    return () => clearInterval(interval); // Clean up on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   const handleEditClick = (employee) => {
@@ -38,49 +38,34 @@ function Payroll() {
     setIsModalOpen(true);
   };
 
-  const formatDateToWords = (dateString) => {
-    if (!dateString) return '';
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric',
-    });
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleSaveChanges = async () => {
-    if (!selectedEmployee) return;
-    try {
-      const response = await fetch('http://localhost/central_juan/backend/employee.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(selectedEmployee),
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP status ${response.status}`);
-      }
-      const result = await response.json();
-      alert(result.message);
-      setIsModalOpen(false);
-    } catch (error) {
-      console.error('Error updating employee:', error);
+  const handleAddEmployee = () => {
+    if (role === 'admin') {
+      // Navigate to add employee form or show form
+      alert('Navigating to add employee form...');
+    } else {
+      alert('Only admins can add employees.');
     }
   };
 
-  if (loading) {
-    return <div>Loading employee data...</div>;
-  }
+  const handleDeleteEmployee = (empId) => {
+    if (role === 'admin') {
+      // Delete employee request here
+      alert(`Employee with ID ${empId} deleted.`);
+    } else {
+      alert('Only admins can delete employees.');
+    }
+  };
 
   return (
     <div>
       <h1>Payroll</h1>
+      <p>Role: <strong>{role}</strong></p>
       <Link to="/dashboard">
         <button>Back to Dashboard</button>
       </Link>
+      {role === 'admin' && (
+        <button onClick={handleAddEmployee}>Add Employee</button>
+      )}
       <table>
         <thead>
           <tr>
@@ -95,6 +80,7 @@ function Payroll() {
             <th>Time In</th>
             <th>Time Out</th>
             <th>Edit</th>
+            {role === 'admin' && <th>Delete</th>}
           </tr>
         </thead>
         <tbody>
@@ -105,7 +91,7 @@ function Payroll() {
               <td>{employee.lastname}</td>
               <td>{employee.contact_num}</td>
               <td>{employee.address}</td>
-              <td>{formatDateToWords(employee.birthday)}</td>
+              <td>{new Date(employee.birthday).toLocaleDateString()}</td>
               <td>{employee.gender}</td>
               <td>{employee.position}</td>
               <td>{employee.time_in}</td>
@@ -113,81 +99,15 @@ function Payroll() {
               <td>
                 <button onClick={() => handleEditClick(employee)}>Edit</button>
               </td>
+              {role === 'admin' && (
+                <td>
+                  <button onClick={() => handleDeleteEmployee(employee.emp_id)}>Delete</button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
-
-      {/* Modal */}
-      {isModalOpen && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={handleCloseModal}>
-              &times;
-            </span>
-            <h2>Edit Employee</h2>
-            <form>
-              <label>First Name:</label>
-              <input
-                type="text"
-                value={selectedEmployee?.firstname || ''}
-                onChange={(e) => setSelectedEmployee({ ...selectedEmployee, firstname: e.target.value })}
-              />
-              <br />
-              <label>Last Name:</label>
-              <input
-                type="text"
-                value={selectedEmployee?.lastname || ''}
-                onChange={(e) => setSelectedEmployee({ ...selectedEmployee, lastname: e.target.value })}
-              />
-              <br />
-              <label>Contact Number:</label>
-              <input
-                type="text"
-                value={selectedEmployee?.contact_num || ''}
-                onChange={(e) => setSelectedEmployee({ ...selectedEmployee, contact_num: e.target.value })}
-              />
-              <br />
-              <label>Address:</label>
-              <input
-                type="text"
-                value={selectedEmployee?.address || ''}
-                onChange={(e) => setSelectedEmployee({ ...selectedEmployee, address: e.target.value })}
-              />
-              <br />
-              <label>Birthday:</label>
-              <input
-                type="date"
-                value={selectedEmployee?.birthday || ''}
-                onChange={(e) => setSelectedEmployee({ ...selectedEmployee, birthday: e.target.value })}
-              />
-              <br />
-              <label>Gender:</label>
-              <select
-                value={selectedEmployee?.gender || ''}
-                onChange={(e) => setSelectedEmployee({ ...selectedEmployee, gender: e.target.value })}
-              >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-              <br />
-              <label>Position:</label>
-              <input
-                type="text"
-                value={selectedEmployee?.position || ''}
-                onChange={(e) => setSelectedEmployee({ ...selectedEmployee, position: e.target.value })}
-              />
-              <br />
-              <button type="button" onClick={handleSaveChanges}>
-                Save Changes
-              </button>
-              <button type="button" onClick={handleCloseModal}>
-                Cancel
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

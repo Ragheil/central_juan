@@ -7,12 +7,11 @@ function App() {
   return (
     <Router>
       <div className="app-container">
-        <h1>React App with Login and Dashboard</h1>
 
         <Routes>
-          <Route path="/login" element={<Login />} /> {/* Removed .jsx */}
-          <Route path="/dashboard" element={<Dashboard />} /> {/* Removed .jsx */}
-          <Route path="/" element={<Login />} /> {/* Default to Login */}
+          <Route path="/login" element={<Login />} /> 
+          <Route path="/dashboard" element={<Dashboard />} /> 
+          <Route path="/" element={<Login />} /> 
         </Routes>
       </div>
     </Router>

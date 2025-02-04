@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import '../../frontend/components/payroll.css'; // Import the CSS file
+import '../../frontend/components/payroll.css';
 
 function Payroll() {
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedEmployee, setSelectedEmployee] = useState(null); // State to hold the selected employee
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const POLL_INTERVAL_MS = 5000; // Poll every 5 seconds
 
-  // Fetch employee data from the backend API
+  // Fetch employee data with auto-refresh
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
@@ -27,44 +28,41 @@ function Payroll() {
     };
 
     fetchEmployees();
+    const interval = setInterval(fetchEmployees, POLL_INTERVAL_MS);
+
+    return () => clearInterval(interval); // Clean up on component unmount
   }, []);
 
   const handleEditClick = (employee) => {
-    setSelectedEmployee(employee); // Set the selected employee
-    setIsModalOpen(true); // Open the modal
+    setSelectedEmployee(employee);
+    setIsModalOpen(true);
   };
 
-  function formatDateToWords(dateString) {
-    if (!dateString) return ''; // Handle empty or invalid dates
+  const formatDateToWords = (dateString) => {
+    if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
       month: 'long',
       day: 'numeric',
       year: 'numeric',
     });
-  }
-  
+  };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
+    setIsModalOpen(false);
   };
 
   const handleSaveChanges = async () => {
     if (!selectedEmployee) return;
-  
     try {
       const response = await fetch('http://localhost/central_juan/backend/employee.php', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(selectedEmployee),
       });
-  
       if (!response.ok) {
         throw new Error(`HTTP status ${response.status}`);
       }
-  
       const result = await response.json();
       alert(result.message);
       setIsModalOpen(false);
@@ -72,8 +70,6 @@ function Payroll() {
       console.error('Error updating employee:', error);
     }
   };
-  
-  
 
   if (loading) {
     return <div>Loading employee data...</div>;
@@ -102,32 +98,33 @@ function Payroll() {
           </tr>
         </thead>
         <tbody>
-        {employees.map((employee) => (
+          {employees.map((employee) => (
             <tr key={employee.emp_id}>
-            <td>{employee.emp_id}</td>
-            <td>{employee.firstname}</td>
-            <td>{employee.lastname}</td>
-            <td>{employee.contact_num}</td>
-            <td>{employee.address}</td>
-            <td>{formatDateToWords(employee.birthday)}</td>
-            <td>{employee.gender}</td>
-            <td>{employee.position}</td>
-            <td>{employee.time_in}</td>
-            <td>{employee.time_out}</td>
-            <td>
+              <td>{employee.emp_id}</td>
+              <td>{employee.firstname}</td>
+              <td>{employee.lastname}</td>
+              <td>{employee.contact_num}</td>
+              <td>{employee.address}</td>
+              <td>{formatDateToWords(employee.birthday)}</td>
+              <td>{employee.gender}</td>
+              <td>{employee.position}</td>
+              <td>{employee.time_in}</td>
+              <td>{employee.time_out}</td>
+              <td>
                 <button onClick={() => handleEditClick(employee)}>Edit</button>
-            </td>
+              </td>
             </tr>
-        ))}
+          ))}
         </tbody>
-
       </table>
 
-      {/* Modal for editing employee */}
+      {/* Modal */}
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
-            <span className="close" onClick={handleCloseModal}>&times;</span>
+            <span className="close" onClick={handleCloseModal}>
+              &times;
+            </span>
             <h2>Edit Employee</h2>
             <form>
               <label>First Name:</label>
@@ -181,8 +178,12 @@ function Payroll() {
                 onChange={(e) => setSelectedEmployee({ ...selectedEmployee, position: e.target.value })}
               />
               <br />
-              <button type="button" onClick={handleSaveChanges}>Save Changes</button>
-              <button type="button" onClick={handleCloseModal}>Cancel</button>
+              <button type="button" onClick={handleSaveChanges}>
+                Save Changes
+              </button>
+              <button type="button" onClick={handleCloseModal}>
+                Cancel
+              </button>
             </form>
           </div>
         </div>

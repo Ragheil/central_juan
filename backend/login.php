@@ -1,32 +1,20 @@
 <?php
+include('connection.php');
+
 // CORS Headers
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    // Preflight response
     http_response_code(204);
     exit;
-}
-
-// Database connection
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "central_juan_hris";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die(json_encode(["message" => "Database connection failed: " . $conn->connect_error]));
 }
 
 $data = json_decode(file_get_contents("php://input"), true);
 $user = $data['username'] ?? '';
 $pass = $data['password'] ?? '';
 
-// SQL query to fetch user data from the database
 $sql = "SELECT * FROM users WHERE username = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $user);

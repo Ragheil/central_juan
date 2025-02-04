@@ -1,5 +1,5 @@
 import { useState } from 'react';
-//import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { UserIcon, BriefcaseIcon } from 'lucide-react';
 import '../../frontend/dashboard/dashboard.css'; // Import the CSS file
 
@@ -47,6 +47,14 @@ function Dashboard() {
             Log Out
           </button>
         </div>
+      </div>
+
+      {/* Right Navigation Menu */}
+      <div className="left-nav">
+        <ul>
+          <li><Link to="/payroll">Payroll</Link></li>
+          {/* You can add more links here as needed */}
+        </ul>
       </div>
 
       {/* Popup for logout confirmation */}

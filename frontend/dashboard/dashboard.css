@@ -156,4 +156,92 @@
   .popup-cancel:hover {
     background-color: #c53030;
   }
+  /* Add this CSS to your dashboard.css */
+
+.dashboard-container {
+    display: flex;
+    position: relative;
+  }
+  
+  .dashboard-card {
+    flex: 3;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .right-nav {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: #f7fafc;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  .right-nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .right-nav li {
+    margin: 10px 0;
+  }
+  
+  .right-nav a {
+    color: #3182ce;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  .right-nav a:hover {
+    text-decoration: underline;
+  }
+  
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .popup-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+  }
+  
+  .popup-buttons {
+    margin-top: 20px;
+  }
+  
+  .popup-confirm,
+  .popup-cancel {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  .popup-confirm {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .popup-cancel {
+    background-color: #f44336;
+    color: white;
+  }
   

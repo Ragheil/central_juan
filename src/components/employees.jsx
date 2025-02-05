@@ -69,6 +69,39 @@ function Employees() {
     }
   };
 
+  // Handle delete button click to confirm deletion
+  const handleDeleteClick = async (employeeId) => {
+    if (role !== 'admin') {
+      alert('You do not have permission to delete employees.');
+      return;
+    }
+  
+    const confirmDelete = window.confirm(`Are you sure you want to delete Employee ${employeeId}?`);
+    if (confirmDelete) {
+      try {
+        const response = await fetch('http://localhost/central_juan/backend/employees.php', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ employee_id: employeeId }),
+        });
+  
+        const data = await response.json();
+        if (data.success) {
+          alert(data.message);
+          setEmployees((prevEmployees) =>
+            prevEmployees.filter((employee) => employee.employee_id !== employeeId)
+          );
+        } else {
+          alert(data.message);
+        }
+      } catch (error) {
+        console.error('Error deleting employee:', error);
+        alert('An error occurred while deleting the employee.');
+      }
+    }
+  };
+  
+
   // Close the modal and reset selected employee
   const handleModalClose = () => {
     setIsModalOpen(false);
@@ -130,7 +163,7 @@ function Employees() {
                 </td>
                 {role === 'admin' && (
                   <td>
-                    <button onClick={() => alert(`Deleting Employee ${employees.employee_id}`)}>Delete</button>
+                    <button onClick={() => handleDeleteClick(employees.employee_id)}>Delete</button>
                   </td>
                 )}
               </tr>

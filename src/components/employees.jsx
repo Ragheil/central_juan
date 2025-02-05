@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import '../../frontend/components/payroll.css';
+import '../../frontend/components/employees.css';
 
 function Employees() {
   const [employees, setEmployees] = useState([]);

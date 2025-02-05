@@ -17,6 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['departments'])) {
+    $result = $conn->query("SELECT department_name FROM departments");
+    $departments = [];
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $departments[] = $row['department_name'];
+        }
+    }
+    echo json_encode($departments);
+    exit;
+}
 // Read the input data
 $inputData = json_decode(file_get_contents("php://input"), true);
 error_log("Input Data: " . print_r($inputData, true)); // Log input data

@@ -4,12 +4,13 @@ import '../../frontend/components/employees.css';
 
 function Employees() {
   const [employees, setEmployees] = useState([]);
+  const [departments, setDepartments] = useState([]); // State for departments
   const [loading, setLoading] = useState(true);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [newEmployee, setNewEmployee] = useState({
-    employee_id: '', // Add employee_id to the state
+    employee_id: '',
     first_name: '',
     middle_name: '',
     last_name: '',
@@ -39,7 +40,18 @@ function Employees() {
       }
     };
 
+    const fetchDepartments = async () => {
+      try {
+        const response = await fetch('http://localhost/central_juan/backend/employees.php?departments=true');
+        const data = await response.json();
+        setDepartments(data);
+      } catch (error) {
+        console.error('Error fetching department data:', error);
+      }
+    };
+
     fetchEmployees();
+    fetchDepartments(); // Fetch departments
     const interval = setInterval(fetchEmployees, POLL_INTERVAL_MS);
 
     return () => clearInterval(interval);
@@ -62,8 +74,6 @@ function Employees() {
         throw new Error('Error updating employee');
       }
 
-      const data = await response.json();
-      console.log('Employee updated successfully:', data);
       alert('Employee updated successfully!');
       setEmployees((prev) => prev.map(emp => emp.employee_id === employeeData.employee_id ? employeeData : emp));
     } catch (error) {
@@ -95,7 +105,7 @@ function Employees() {
       setEmployees((prev) => [...prev, { ...employeeData, employee_id: data.employee_id }]);
       setIsAddModalOpen(false);
       setNewEmployee({
-        employee_id: '', // Reset employee_id
+        employee_id: '',
         first_name: '',
         middle_name: '',
         last_name: '',
@@ -163,7 +173,7 @@ function Employees() {
   const handleAddModalClose = () => {
     setIsAddModalOpen(false);
     setNewEmployee({
-      employee_id: '', // Reset employee_id
+      employee_id: '',
       first_name: '',
       middle_name: '',
       last_name: '',
@@ -256,7 +266,7 @@ function Employees() {
                   type="text"
                   name="employee_id"
                   value={selectedEmployee.employee_id}
-                  readOnly // Make it read-only to prevent changes
+                  readOnly
                 />
               </label>
               <label>
@@ -403,14 +413,18 @@ function Employees() {
                 />
               </label>
               <label>
-                Department ID:
-                <input
-                  type="text"
+                Department:
+                <select
                   name="department_id"
                   value={newEmployee.department_id}
                   onChange={handleAddInputChange}
                   required
-                />
+                >
+                  <option value="">Select Department</option>
+                  {departments.map((department, index) => (
+                    <option key={index} value={department}>{department}</option>
+                  ))}
+                </select>
               </label>
               <label>
                 Position Title:

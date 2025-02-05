@@ -29,8 +29,8 @@ function Dashboard() {
     <div className="dashboard-container">
       {/* Left Navigation */}
       <div className="left-nav">
-        <Link to="/payroll">
-          <button> Payroll</button>
+        <Link to="/employees">
+          <button> employees</button>
         </Link>
       </div>
 
@@ -59,7 +59,7 @@ function Dashboard() {
       {/* Right Navigation 
       <div className="right-nav">
         <ul>
-          <li><Link to="/payroll">Payroll</Link></li>
+          <li><Link to="/employees">employees</Link></li>
           {/* You can add more links here as needed 
         </ul>
       </div>*/}

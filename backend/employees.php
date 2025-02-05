@@ -16,18 +16,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 $inputData = json_decode(file_get_contents("php://input"), true);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($inputData)) {
-    $empId = $inputData['emp_id'];
-    $firstname = $inputData['firstname'];
-    $lastname = $inputData['lastname'];
-    $contact_num = $inputData['contact_num'];
-    $address = $inputData['address'];
-    $birthday = $inputData['birthday'];
-    $gender = $inputData['gender'];
-    $position = $inputData['position'];
+    $employeeId = $inputData['employee_id'];
+    $firstName = $inputData['first_name'];
+    $middleName = $inputData['middle_name'];
+    $lastName = $inputData['last_name'];
+    $email = $inputData['email'];
+    $contactNumber = $inputData['contact_number'];
+    $dob = $inputData['date_of_birth'];
+    $departmentId = $inputData['department_id'];
+    $positionTitle = $inputData['position_title'];
 
     // Update employee in the database
-    $stmt = $conn->prepare("UPDATE employee SET firstname = ?, lastname = ?, contact_num = ?, address = ?, birthday = ?, gender = ?, position = ? WHERE emp_id = ?");
-    $stmt->bind_param("sssssssi", $firstname, $lastname, $contact_num, $address, $birthday, $gender, $position, $empId);
+    $stmt = $conn->prepare("
+        UPDATE employees 
+        SET first_name = ?, middle_name = ?, last_name = ?, email = ?, contact_number = ?, date_of_birth = ?, department_id = ?, position_title = ? 
+        WHERE employee_id = ?
+    ");
+    $stmt->bind_param(
+        "sssssssss", 
+        $firstName, $middleName, $lastName, $email, $contactNumber, $dob, $departmentId, $positionTitle, $employeeId
+    );
 
     if ($stmt->execute()) {
         echo json_encode(["message" => "Employee updated successfully"]);
@@ -38,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($inputData)) {
     $stmt->close();
 } else {
     // Default: Return employees
-    $sql = "SELECT * FROM employee";
+    $sql = "SELECT * FROM employees";
     $result = $conn->query($sql);
 
     $employees = [];

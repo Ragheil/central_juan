@@ -13,7 +13,7 @@ function Payroll() {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await fetch('http://localhost/central_juan/backend/employee.php');
+        const response = await fetch('http://localhost/central_juan/backend/employees.php');
         const data = await response.json();
         if (data.message) {
           alert(data.message);
@@ -40,17 +40,15 @@ function Payroll() {
 
   const handleAddEmployee = () => {
     if (role === 'admin') {
-      // Navigate to add employee form or show form
       alert('Navigating to add employee form...');
     } else {
       alert('Only admins can add employees.');
     }
   };
 
-  const handleDeleteEmployee = (empId) => {
+  const handleDeleteEmployee = (employeeId) => {
     if (role === 'admin') {
-      // Delete employee request here
-      alert(`Employee with ID ${empId} deleted.`);
+      alert(`Employee with ID ${employeeId} deleted.`);
     } else {
       alert('Only admins can delete employees.');
     }
@@ -66,48 +64,50 @@ function Payroll() {
       {role === 'admin' && (
         <button onClick={handleAddEmployee}>Add Employee</button>
       )}
-      <table>
-        <thead>
-          <tr>
-            <th>Emp ID</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Contact Number</th>
-            <th>Address</th>
-            <th>Birthday</th>
-            <th>Gender</th>
-            <th>Position</th>
-            <th>Time In</th>
-            <th>Time Out</th>
-            <th>Edit</th>
-            {role === 'admin' && <th>Delete</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {employees.map((employee) => (
-            <tr key={employee.emp_id}>
-              <td>{employee.emp_id}</td>
-              <td>{employee.firstname}</td>
-              <td>{employee.lastname}</td>
-              <td>{employee.contact_num}</td>
-              <td>{employee.address}</td>
-              <td>{new Date(employee.birthday).toLocaleDateString()}</td>
-              <td>{employee.gender}</td>
-              <td>{employee.position}</td>
-              <td>{employee.time_in}</td>
-              <td>{employee.time_out}</td>
-              <td>
-                <button onClick={() => handleEditClick(employee)}>Edit</button>
-              </td>
-              {role === 'admin' && (
-                <td>
-                  <button onClick={() => handleDeleteEmployee(employee.emp_id)}>Delete</button>
-                </td>
-              )}
+      {loading ? (
+        <p>Loading employees...</p>
+      ) : (
+        <table>
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>First Name</th>
+              <th>Middle Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Contact Number</th>
+              <th>Date of Birth</th>
+              <th>Department ID</th>
+              <th>Position Title</th>
+              <th>Edit</th>
+              {role === 'admin' && <th>Delete</th>}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {employees.map((employee) => (
+              <tr key={employee.employee_id}>
+                <td>{employee.employee_id}</td>
+                <td>{employee.first_name}</td>
+                <td>{employee.middle_name || 'N/A'}</td>
+                <td>{employee.last_name}</td>
+                <td>{employee.email}</td>
+                <td>{employee.contact_number}</td>
+                <td>{new Date(employee.date_of_birth).toLocaleDateString()}</td>
+                <td>{employee.department_id || 'N/A'}</td>
+                <td>{employee.position_title || 'N/A'}</td>
+                <td>
+                  <button onClick={() => handleEditClick(employee)}>Edit</button>
+                </td>
+                {role === 'admin' && (
+                  <td>
+                    <button onClick={() => handleDeleteEmployee(employee.employee_id)}>Delete</button>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

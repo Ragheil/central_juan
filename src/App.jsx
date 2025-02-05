@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from '../src/authentication/login'; 
 import Dashboard from './dashboard/dashboard'; 
-import Payroll from './components/payroll';  // Import the Payroll component
+import Employees from './components/employees';  // Import the Payroll component
 
 import '../frontend/App.css';
 
@@ -13,7 +13,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} /> 
           <Route path="/dashboard" element={<Dashboard />} /> 
-          <Route path="/payroll" element={<Payroll />} />
+          <Route path="/employees" element={<Employees />} />
           <Route path="/" element={<Login />} /> 
         </Routes>
       </div>

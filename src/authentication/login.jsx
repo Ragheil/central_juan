@@ -3,16 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../frontend/authentication/login.css'; // Import the CSS file
 
-// Function to render the login page
 function Login() {
-  // State to store the username and password
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(false); // State to toggle password visibility
-  // Hook to navigate to different pages
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(''); // State to store error message
   const navigate = useNavigate();
 
-  // Function to handle the login
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
@@ -22,16 +19,19 @@ function Login() {
         { headers: { 'Content-Type': 'application/json' } }
       );
   
-      alert(response.data.message);
-  
       if (response.data.message === 'Login successful') {
         localStorage.setItem('username', username);
         localStorage.setItem('role', response.data.role);
-        navigate('/dashboard'); // Navigate to dashboard if login is successful
+        navigate('/dashboard');
+      } else {
+        // Display the error message in the modal
+        setErrorMessage(response.data.message);
+        openModal();
       }
     } catch (error) {
       console.error('Error during login:', error);
-      alert('Server error or invalid credentials');
+      setErrorMessage('Server error or invalid credentials');
+      openModal();
     }
   };
 
@@ -40,34 +40,55 @@ function Login() {
     setPasswordVisible(!passwordVisible);
   };
 
-  // Render the login page
+  // Modal functionality
+  const openModal = () => {
+    document.getElementById("errorModal").style.display = "block";
+  };
+
+  const closeModal = () => {
+    document.getElementById("errorModal").style.display = "none";
+  };
+
   return (
     <div className="login-container">
-      <h1>Login Page</h1>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
+      <div className="logo-section">
+        <img src="../../frontend/images/central_logo.png" alt="Central Logo" className="logo" />
+      </div>
+      <div className="login-form-section">
+        <h1>Login</h1>
+        <form onSubmit={handleLogin}>
+          <div>
+            <label>Username:</label>
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </div>
+          <div className="password-container">
+            <label>Password:</label>
+            <input
+              type={passwordVisible ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <span className="eye-icon" onClick={togglePasswordVisibility}>
+              {passwordVisible ? '👁️' : '🙈'}
+            </span>
+          </div>
+          <button type="submit">Login</button>
+        </form>
+      </div>
+
+      {/* Error Modal */}
+      <div id="errorModal" className="modal">
+        <div className="modal-content">
+          <p>{errorMessage}</p>
+          <button className="ok-button" onClick={closeModal}>OK</button>
         </div>
-        <div className="password-container">
-          <label>Password:</label>
-          <input
-            type={passwordVisible ? 'text' : 'password'} // Toggle input type based on visibility
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-          <span className="eye-icon" onClick={togglePasswordVisibility}>
-            {passwordVisible ? '👁️' : '🙈'} {/* Simple eye icon for toggle */}
-          </span>
-        </div>
-        <button type="submit">Login</button>
-      </form>
+      </div>
     </div>
   );
 }

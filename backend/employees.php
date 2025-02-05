@@ -21,10 +21,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
+// Mock role validation (replace this with real user role validation)
+$role = $_SERVER['HTTP_ROLE'] ?? ''; // Assuming role is passed in headers for simplicity
+
 // Read the input data
 $inputData = json_decode(file_get_contents("php://input"), true);
 
-// Validate input data for PUT and POST requests
+// Validate input data for POST and PUT requests
 if (!$inputData && ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'PUT')) {
     echo json_encode(["message" => "Invalid input data"]);
     http_response_code(400);
@@ -46,17 +49,20 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case 'POST':
-        // Validate required fields for POST
+        if ($role !== 'admin') {
+            echo json_encode(["message" => "Unauthorized: Only admins can add employees"]);
+            http_response_code(403);
+            exit;
+        }
+
         if (empty($inputData['employee_id']) || empty($inputData['first_name']) || empty($inputData['last_name'])) {
             echo json_encode(["message" => "Employee ID, first name, and last name are required"]);
             http_response_code(400);
             exit;
         }
 
-        // Handle null value for middle_name explicitly
         $middleName = $inputData['middle_name'] ?? null;
 
-        // Add a new employee
         $stmt = $conn->prepare("
             INSERT INTO employees (employee_id, first_name, middle_name, last_name, email, contact_number, date_of_birth, department_id, position_title)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -79,7 +85,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case 'PUT':
-        // Validate required fields for PUT
         if (empty($inputData['employee_id'])) {
             echo json_encode(["message" => "Employee ID is required"]);
             http_response_code(400);
@@ -88,7 +93,6 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
         $middleName = $inputData['middle_name'] ?? null;
 
-        // Update employee data
         $stmt = $conn->prepare("
             UPDATE employees
             SET first_name = ?, middle_name = ?, last_name = ?, email = ?, contact_number = ?, date_of_birth = ?, department_id = ?, position_title = ?
@@ -112,7 +116,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
         break;
 
     case 'DELETE':
-        // Validate employee_id for DELETE
+        if ($role !== 'admin') {
+            echo json_encode(["message" => "Unauthorized: Only admins can delete employees"]);
+            http_response_code(403);
+            exit;
+        }
+
         if (empty($_GET['employee_id'])) {
             echo json_encode(["message" => "Employee ID is required"]);
             http_response_code(400);

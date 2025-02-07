@@ -50,35 +50,42 @@ function Login() {
   };
 
   return (
-    <div className="login-container"> 
-      <div className="logo-section">
+    <div className="login-container flex bg-indigo-700 justify-center items-center h-screen w-screen"> 
+      <div className='flex bg-white flex-col justify-center items-center rounded-lg shadow-lg w-2/4 h-3/4'>
         <img src="../../frontend/images/central_logo.png" alt="Central Logo" className="logo" />
-      </div>
-      <div className="login-form-section">
-        <h1>Login</h1>
-        <form onSubmit={handleLogin}>
-        <div>
-          <label>Username:</label>
-          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+        <div className="login-form-section">
+            <form onSubmit={handleLogin}>
+            <div>
+              <input placeholder='Username' type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+            </div>
+            <div className="relative">
+              <input 
+                placeholder='Password' 
+                type={passwordVisible ? 'text' : 'password'} 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                required 
+                className="p-2 pl-4 pr-10 w-full border rounded-lg"
+              />
+              <span 
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer pb-3" 
+                onClick={togglePasswordVisibility}
+              >
+                {passwordVisible ? '👁️' : '🙈'}
+              </span>
+            </div>
+
+            <button type="submit">Login</button>
+          </form>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-          <span className="eye-icon" onClick={togglePasswordVisibility}>
-              {passwordVisible ? '👁️' : '🙈'}
-            </span>        
-        </div> 
-        <button type="submit">Login</button>
-      </form>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-      </div>
-
-      {/* Error Modal */}
-      <div id="errorModal" className="modal">
-        <div className="modal-content">
-          <p>{errorMessage}</p>
-          <button className="ok-button" onClick={closeModal}>OK</button>
+        {/* Error Modal */}
+        <div id="errorModal" className="modal">
+          <div className="modal-content">
+            <p>{errorMessage}</p>
+            <button className="ok-button" onClick={closeModal}>OK</button>
+          </div>
         </div>
       </div>
     </div>

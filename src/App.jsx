@@ -3,7 +3,7 @@ import Login from '../src/authentication/login';
 import Dashboard from './dashboard/dashboard'; 
 import Employees from './components/employees';  // Import the Payroll component
 
-import '../frontend/App.css';
+import '../Styles/App.css';
 
 function App() {
   return (

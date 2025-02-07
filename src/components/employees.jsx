@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import '../../frontend/components/employees.css';
+import '../../Styles/components/employees.css';
 
 function Employees() {
   const [employees, setEmployees] = useState([]);

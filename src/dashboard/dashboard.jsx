@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { UserIcon, BriefcaseIcon } from 'lucide-react';
-import '../../frontend/dashboard/dashboard.css'; // Import the CSS file
+import '../../Styles/dashboard/dashboard.css'; // Import the CSS file
 
 function Dashboard() {
   // Retrieve the username and role from local storage

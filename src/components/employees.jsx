@@ -133,21 +133,45 @@ function Employees() {
       ) : (
         <div>
           <table className="employee-table">
-            <thead>
-              <tr>
-                <th>Employee ID</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-
-                <th>Email</th>
-                <th>Contact Number</th>
-                <th>Date of Birth</th>
-                <th>Department ID</th>
-                <th>Position Title</th>
-                <th>Actions</th>
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>First Name</th>
+              <th>Middle Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Contact Number</th>
+              <th>Date of Birth</th>
+              <th>Department ID</th>
+              <th>Position Title</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {employees.map(employee => (
+              <tr key={employee.employee_id || `${employee.first_name}-${employee.last_name}`}>
+                <td>{employee.employee_id}</td>
+                <td>{employee.first_name}</td>
+                <td>{employee.middle_name || 'N/A'}</td>
+                <td>{employee.last_name}</td>
+                <td>{employee.email}</td>
+                <td>{employee.contact_number}</td>
+                <td>{new Date(employee.date_of_birth).toLocaleDateString()}</td>
+                <td>{employee.department_id || 'N/A'}</td>
+                <td>{employee.position_title || 'N/A'}</td>
+                <td>
+                  {user?.role === 'ADMIN' && (
+                    <>
+                      <button onClick={() => handleEditEmployee(employee)}>Edit</button>
+                      <button onClick={() => handleDeleteEmployee(employee.employee_id)}>Delete</button>
+                    </>
+                  )}
+                </td>
               </tr>
-            </thead>
-            <tbody>
+            ))}
+          </tbody>
+
+            {/* <tbody>
               {employees.map(employee => (
                 <tr key={employee.employee_id || `${employee.first_name}-${employee.last_name}`}>
                   <td>{employee.employee_id}</td>
@@ -170,7 +194,7 @@ function Employees() {
                   </td>
                 </tr>
               ))}
-            </tbody>
+            </tbody> */}
           </table>
 
           {user?.role === 'ADMIN' && (

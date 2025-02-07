@@ -3,6 +3,7 @@ import { SessionProvider } from './context/SessionContext'; // Create SessionCon
 import Login from '../src/authentication/login';
 import Dashboard from './dashboard/dashboard';
 import Employees from './components/employees';
+import Topnav from './components/topnav';
 import '../Styles/App.css';
 
 function App() {
@@ -11,6 +12,7 @@ function App() {
       <Router>
         <div className="app-container">
           <Routes>
+            <Route path="/topnav" element={<Topnav/>} />
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/employees" element={<Employees />} />

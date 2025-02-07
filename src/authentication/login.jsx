@@ -51,8 +51,9 @@ function Login() {
 
   return (
     <div className="login-container flex bg-indigo-700 justify-center items-center h-screen w-screen"> 
-      <div className='flex bg-white flex-col justify-center items-center rounded-lg shadow-lg w-2/4 h-3/4'>
-        <img src="../../frontend/images/central_logo.png" alt="Central Logo" className="logo" />
+        <div>
+          <img src="../../frontend/images/central_logo.png" alt="Central Logo" className="logo" />
+        </div>
         <div className="login-form-section">
             <form onSubmit={handleLogin}>
             <div>
@@ -88,7 +89,6 @@ function Login() {
           </div>
         </div>
       </div>
-    </div>
   );
 }
 

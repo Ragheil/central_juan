@@ -8,12 +8,20 @@ function Employees() {
 
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [newEmployee, setNewEmployee] = useState({
+    employee_id: '',
+    first_name: '',
+    middle_name: '',
+    last_name: '',
+    email: '',
+    contact_number: '',
+    date_of_birth: '',
+    department_id: '',
+    position_title: '',
+  });
+  const [editingEmployee, setEditingEmployee] = useState(null);
 
   useEffect(() => {
-    if (user) {
-      console.log(`Access Level: ${user.role ? user.role.toUpperCase() : 'Unknown'}`);
-    }
-
     const fetchEmployees = async () => {
       try {
         const response = await fetch('http://localhost/central_juan/backend/employees.php');
@@ -32,50 +40,199 @@ function Employees() {
     };
 
     fetchEmployees();
-  }, [user]);
+  }, []);
 
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return dateString ? new Date(dateString).toLocaleDateString('en-US', options) : 'N/A';
+  const handleAddOrUpdateEmployee = async (e) => {
+    e.preventDefault();
+    const url = editingEmployee
+      ? 'http://localhost/central_juan/backend/update_employee.php'
+      : 'http://localhost/central_juan/backend/add_employee.php';
+
+    const method = editingEmployee ? 'PUT' : 'POST';
+
+    try {
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newEmployee),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        if (editingEmployee) {
+          setEmployees(employees.map(emp => (emp.employee_id === newEmployee.employee_id ? newEmployee : emp)));
+        } else {
+          setEmployees([...employees, { ...newEmployee, employee_id: data.employee_id }]);
+        }
+        setEditingEmployee(null);
+        setNewEmployee({
+          employee_id: '',
+          first_name: '',
+          middle_name: '',
+          last_name: '',
+          email: '',
+          contact_number: '',
+          date_of_birth: '',
+          department_id: '',
+          position_title: '',
+        });
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      alert('Error saving employee. Please try again later.');
+      console.error('Error saving employee:', error);
+    }
+  };
+
+  const handleEditEmployee = (employee) => {
+    setEditingEmployee(employee);
+    setNewEmployee(employee);
+  };
+
+  const handleDeleteEmployee = async (employee_id) => {
+    if (!window.confirm('Are you sure you want to delete this employee?')) return;
+
+    try {
+      const response = await fetch(`http://localhost/central_juan/backend/delete_employee.php?id=${employee_id}`, {
+        method: 'DELETE',
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setEmployees(employees.filter(emp => emp.employee_id !== employee_id));
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      alert('Error deleting employee. Please try again later.');
+      console.error('Error deleting employee:', error);
+    }
   };
 
   return (
     <div>
       <h1>Employees</h1>
       <p>Welcome, {user?.username || 'Guest'} (Role: {user?.role || 'N/A'})</p>
+
       {loading ? (
         <p>Loading employees...</p>
       ) : (
-        <table className="employee-table">
-          <thead>
-            <tr>
-              <th>Employee ID</th>
-              <th>First Name</th>
-              <th>Middle Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Contact Number</th>
-              <th>Date of Birth</th>
-              <th>Department ID</th>
-              <th>Position Title</th>
-            </tr>
-          </thead>
-          <tbody>
-            {employees.map((employee) => (
-              <tr key={employee.employee_id}>
-                <td>{employee.employee_id}</td>
-                <td>{employee.first_name}</td>
-                <td>{employee.middle_name || 'N/A'}</td>
-                <td>{employee.last_name}</td>
-                <td>{employee.email}</td>
-                <td>{employee.contact_number}</td>
-                <td>{formatDate(employee.date_of_birth)}</td>
-                <td>{employee.department_id || 'N/A'}</td>
-                <td>{employee.position_title || 'N/A'}</td>
+        <div>
+          <table className="employee-table">
+            <thead>
+              <tr>
+                <th>Employee ID</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Contact Number</th>
+                <th>Date of Birth</th>
+                <th>Department ID</th>
+                <th>Position Title</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {employees.map(employee => (
+                <tr key={employee.employee_id || `${employee.first_name}-${employee.last_name}`}>
+                  <td>{employee.employee_id}</td>
+                  <td>{employee.first_name}</td>
+                  <td>{employee.last_name}</td>
+                  <td>{employee.email}</td>
+                  <td>{employee.contact_number}</td>
+                  <td>{new Date(employee.date_of_birth).toLocaleDateString()}</td>
+                  <td>{employee.department_id || 'N/A'}</td>
+                  <td>{employee.position_title || 'N/A'}</td>
+                  <td>
+                    {user?.role === 'ADMIN' && (
+                      <>
+                        <button onClick={() => handleEditEmployee(employee)}>Edit</button>
+                        <button onClick={() => handleDeleteEmployee(employee.employee_id)}>Delete</button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {user?.role === 'ADMIN' && (
+            <form onSubmit={handleAddOrUpdateEmployee}>
+              <h2>{editingEmployee ? 'Edit Employee' : 'Add Employee'}</h2>
+
+              <input
+                type="text"
+                placeholder="Employee ID (optional)"
+                value={newEmployee.employee_id || ''}
+                onChange={(e) => setNewEmployee({ ...newEmployee, employee_id: e.target.value })}
+              />
+
+              <input
+                type="text"
+                placeholder="First Name"
+                value={newEmployee.first_name}
+                onChange={(e) => setNewEmployee({ ...newEmployee, first_name: e.target.value })}
+                required
+              />
+
+              <input
+                type="text"
+                placeholder="Middle Name"
+                value={newEmployee.middle_name || ''}
+                onChange={(e) => setNewEmployee({ ...newEmployee, middle_name: e.target.value })}
+              />
+
+              <input
+                type="text"
+                placeholder="Last Name"
+                value={newEmployee.last_name}
+                onChange={(e) => setNewEmployee({ ...newEmployee, last_name: e.target.value })}
+                required
+              />
+
+              <input
+                type="email"
+                placeholder="Email"
+                value={newEmployee.email}
+                onChange={(e) => setNewEmployee({ ...newEmployee, email: e.target.value })}
+                required
+              />
+
+              <input
+                type="text"
+                placeholder="Contact Number"
+                value={newEmployee.contact_number}
+                onChange={(e) => setNewEmployee({ ...newEmployee, contact_number: e.target.value })}
+                required
+              />
+
+              <input
+                type="date"
+                placeholder="Date of Birth"
+                value={newEmployee.date_of_birth}
+                onChange={(e) => setNewEmployee({ ...newEmployee, date_of_birth: e.target.value })}
+                required
+              />
+
+              <input
+                type="text"
+                placeholder="Department ID"
+                value={newEmployee.department_id}
+                onChange={(e) => setNewEmployee({ ...newEmployee, department_id: e.target.value })}
+              />
+
+              <input
+                type="text"
+                placeholder="Position Title"
+                value={newEmployee.position_title}
+                onChange={(e) => setNewEmployee({ ...newEmployee, position_title: e.target.value })}
+              />
+
+              <button type="submit">{editingEmployee ? 'Update' : 'Add'} Employee</button>
+            </form>
+          )}
+        </div>
       )}
     </div>
   );

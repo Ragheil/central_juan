@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import EmployeeModal from './EmployeeModal'; // Import the modal component
-import '../../Styles/components/employees.css';
+import '../../../Styles/components/employees.css';
 
 function Employees() {
   const { state } = useLocation();

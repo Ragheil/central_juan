@@ -1,7 +1,7 @@
 // EmployeeModal.jsx
 import React from 'react';
 import PropTypes from 'prop-types'; // Import PropTypes
-import '../../Styles/components/EmployeeModal.css'; // Optional: Add your styles here
+import '../../../Styles/components/EmployeeModal.css'; // Optional: Add your styles here
 
 const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
   const [newEmployee, setNewEmployee] = React.useState(employee || {

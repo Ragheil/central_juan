@@ -1,11 +1,19 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import '../../Styles/components/employees.css';
 
 function Employees() {
+  const { state } = useLocation();
+  const user = state?.user;
+
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (user) {
+      console.log(`Access Level: ${user.role ? user.role.toUpperCase() : 'Unknown'}`);
+    }
+
     const fetchEmployees = async () => {
       try {
         const response = await fetch('http://localhost/central_juan/backend/employees.php');
@@ -24,9 +32,8 @@ function Employees() {
     };
 
     fetchEmployees();
-  }, []);
+  }, [user]);
 
-  // Function to format date to "Month Day, Year"
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return dateString ? new Date(dateString).toLocaleDateString('en-US', options) : 'N/A';
@@ -35,6 +42,7 @@ function Employees() {
   return (
     <div>
       <h1>Employees</h1>
+      <p>Welcome, {user?.username || 'Guest'} (Role: {user?.role || 'N/A'})</p>
       {loading ? (
         <p>Loading employees...</p>
       ) : (
@@ -72,5 +80,5 @@ function Employees() {
     </div>
   );
 }
-  
+
 export default Employees;

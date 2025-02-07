@@ -25,7 +25,7 @@ function Dashboard() {
   return (
     <div className="dashboard-container">
       <div className="left-nav">
-        <Link to="/employees">
+        <Link to="/employees" state={{ user }}>
           <button>Employees</button>
         </Link>
       </div>

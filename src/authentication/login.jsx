@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../../frontend/authentication/login.css'; // Import the CSS file
+import '../../Styles/authentication/login.css'; // Import the CSS file
+import { useSession } from '../context/SessionContext';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -9,6 +10,7 @@ function Login() {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [errorMessage, setErrorMessage] = useState(''); // State to store error message
   const navigate = useNavigate();
+  const { setUser } = useSession();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -18,20 +20,18 @@ function Login() {
         { username, password },
         { headers: { 'Content-Type': 'application/json' } }
       );
-  
+
       if (response.data.message === 'Login successful') {
-        localStorage.setItem('username', username);
-        localStorage.setItem('role', response.data.role);
+        setUser({ username, role: response.data.role });
         navigate('/dashboard');
       } else {
-        // Display the error message in the modal
         setErrorMessage(response.data.message);
-        openModal();
       }
     } catch (error) {
       console.error('Error during login:', error);
       setErrorMessage('Server error or invalid credentials');
       openModal();
+      setErrorMessage('Server error or invalid credentials');
     }
   };
 
@@ -50,36 +50,28 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
+    <div className="login-container"> 
       <div className="logo-section">
         <img src="../../frontend/images/central_logo.png" alt="Central Logo" className="logo" />
       </div>
       <div className="login-form-section">
         <h1>Login</h1>
         <form onSubmit={handleLogin}>
-          <div>
-            <label>Username:</label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-            />
-          </div>
-          <div className="password-container">
-            <label>Password:</label>
-            <input
-              type={passwordVisible ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-            <span className="eye-icon" onClick={togglePasswordVisibility}>
+        <div>
+          <label>Username:</label>
+          <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+        </div>
+        <div>
+          <label>Password:</label>
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          <span className="eye-icon" onClick={togglePasswordVisibility}>
               {passwordVisible ? '👁️' : '🙈'}
-            </span>
-          </div>
-          <button type="submit">Login</button>
-        </form>
+            </span>        
+        </div> 
+        <button type="submit">Login</button>
+      </form>
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
+
       </div>
 
       {/* Error Modal */}

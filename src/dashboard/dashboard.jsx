@@ -1,36 +1,32 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useSession } from '../context/SessionContext';
+import { useNavigate, Link } from 'react-router-dom';
 import { UserIcon, BriefcaseIcon } from 'lucide-react';
-import '../../frontend/dashboard/dashboard.css'; // Import the CSS file
+import { useState } from 'react';
+import '../../Styles/dashboard/dashboard.css';
 
 function Dashboard() {
-  // Retrieve the username and role from local storage
-  const username = localStorage.getItem('username') || 'Guest';
-  const role = localStorage.getItem('role') || 'N/A';
-
-  const [showPopup, setShowPopup] = useState(false); // State for controlling the logout popup visibility
+  const { user, setUser } = useSession();
+  const navigate = useNavigate();
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleLogout = () => {
-    setShowPopup(true); // Show the confirmation popup
+    setShowPopup(true);
   };
 
   const confirmLogout = () => {
-    localStorage.removeItem('username');
-    localStorage.removeItem('role');
-    setShowPopup(false); // Close the popup
-    window.location.href = "/login"; // Redirect to the login page
+    setUser(null);
+    navigate('/login');
   };
 
   const cancelLogout = () => {
-    setShowPopup(false); // Close the popup without logging out
+    setShowPopup(false);
   };
 
   return (
     <div className="dashboard-container">
-      {/* Left Navigation */}
       <div className="left-nav">
-        <Link to="/employees">
-          <button> employees</button>
+        <Link to="/employees" state={{ user }}>
+          <button>Employees</button>
         </Link>
       </div>
 
@@ -41,11 +37,11 @@ function Dashboard() {
         <div className="dashboard-info">
           <div>
             <UserIcon size={18} style={{ color: '#4a5568' }} />
-            <p>Username: <span>{username}</span></p>
+            <p>Username: <span>{user?.username || 'Guest'}</span></p>
           </div>
           <div style={{ marginTop: '0.5rem' }}>
             <BriefcaseIcon size={18} style={{ color: '#4a5568' }} />
-            <p>Role: <span>{role}</span></p>
+            <p>Role: <span>{user?.role || 'N/A'}</span></p>
           </div>
         </div>
 
@@ -54,28 +50,19 @@ function Dashboard() {
             Log Out
           </button>
         </div>
-      </div>
 
-      {/* Right Navigation 
-      <div className="right-nav">
-        <ul>
-          <li><Link to="/employees">employees</Link></li>
-          {/* You can add more links here as needed 
-        </ul>
-      </div>*/}
-
-      {/* Popup for logout confirmation */}
-      {showPopup && (
-        <div className="popup">
-          <div className="popup-content">
-            <h2>Are you sure you want to log out?</h2>
-            <div className="popup-buttons">
-              <button onClick={confirmLogout} className="popup-confirm">Yes</button>
-              <button onClick={cancelLogout} className="popup-cancel">No</button>
+        {showPopup && (
+          <div className="popup">
+            <div className="popup-content">
+              <h2>Are you sure you want to log out?</h2>
+              <div className="popup-buttons">
+                <button onClick={confirmLogout} className="popup-confirm">Yes</button>
+                <button onClick={cancelLogout} className="popup-cancel">No</button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

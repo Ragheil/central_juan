@@ -16,6 +16,7 @@ function Employees() {
           setEmployees(data);
         }
       } catch (error) {
+        alert('Error fetching employee data. Please try again later.');
         console.error('Error fetching employee data:', error);
       } finally {
         setLoading(false);
@@ -28,7 +29,7 @@ function Employees() {
   // Function to format date to "Month Day, Year"
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('en-US', options);
+    return dateString ? new Date(dateString).toLocaleDateString('en-US', options) : 'N/A';
   };
 
   return (
@@ -37,7 +38,7 @@ function Employees() {
       {loading ? (
         <p>Loading employees...</p>
       ) : (
-        <table>
+        <table className="employee-table">
           <thead>
             <tr>
               <th>Employee ID</th>
@@ -60,7 +61,7 @@ function Employees() {
                 <td>{employee.last_name}</td>
                 <td>{employee.email}</td>
                 <td>{employee.contact_number}</td>
-                <td>{formatDate(employee.date_of_birth)}</td> {/* Format the date here */}
+                <td>{formatDate(employee.date_of_birth)}</td>
                 <td>{employee.department_id || 'N/A'}</td>
                 <td>{employee.position_title || 'N/A'}</td>
               </tr>
@@ -71,5 +72,5 @@ function Employees() {
     </div>
   );
 }
-
+  
 export default Employees;

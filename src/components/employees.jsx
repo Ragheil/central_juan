@@ -44,26 +44,36 @@ function Employees() {
 
   const handleAddOrUpdateEmployee = async (e) => {
     e.preventDefault();
+    
     const url = editingEmployee
       ? 'http://localhost/central_juan/backend/update_employee.php'
       : 'http://localhost/central_juan/backend/add_employee.php';
-
-    const method = editingEmployee ? 'PUT' : 'POST';
-
-    try {
+  
+    const method = editingEmployee ? 'POST' : 'POST'; // Changed PUT to POST for compatibility
+  
+    try { 
       const response = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(newEmployee),
       });
-
+  
+      if (!response.ok) {
+        throw new Error(`Request failed with status: ${response.status}`);
+      }
+  
       const data = await response.json();
+      
       if (data.success) {
         if (editingEmployee) {
           setEmployees(employees.map(emp => (emp.employee_id === newEmployee.employee_id ? newEmployee : emp)));
         } else {
           setEmployees([...employees, { ...newEmployee, employee_id: data.employee_id }]);
         }
+  
+        // Reset form state
         setEditingEmployee(null);
         setNewEmployee({
           employee_id: '',
@@ -76,14 +86,17 @@ function Employees() {
           department_id: '',
           position_title: '',
         });
+  
+        alert("Employee record successfully saved.");
       } else {
-        alert(data.message);
+        alert(data.message || "Failed to save employee record.");
       }
     } catch (error) {
-      alert('Error saving employee. Please try again later.');
-      console.error('Error saving employee:', error);
+      alert("Error saving employee. Please try again later.");
+      console.error("Error saving employee:", error);
     }
   };
+  
 
   const handleEditEmployee = (employee) => {
     setEditingEmployee(employee);
@@ -125,6 +138,7 @@ function Employees() {
                 <th>Employee ID</th>
                 <th>First Name</th>
                 <th>Last Name</th>
+
                 <th>Email</th>
                 <th>Contact Number</th>
                 <th>Date of Birth</th>
@@ -138,6 +152,8 @@ function Employees() {
                 <tr key={employee.employee_id || `${employee.first_name}-${employee.last_name}`}>
                   <td>{employee.employee_id}</td>
                   <td>{employee.first_name}</td>
+                  
+
                   <td>{employee.last_name}</td>
                   <td>{employee.email}</td>
                   <td>{employee.contact_number}</td>

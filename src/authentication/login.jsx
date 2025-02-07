@@ -50,35 +50,36 @@ function Login() {
   };
 
   return (
-    <div className="login-container flex bg-indigo-700 justify-center items-center h-screen w-screen"> 
-        <div>
-          <img src="../../frontend/images/central_logo.png" alt="Central Logo" className="logo" />
+    <div className="login-container flex bg-indigo-700 flex-row h-screen w-screen"> 
+        <div className='logo-container flex flex-1 justify-center items-center bg-white'>
+          <img src="../../src/assets/cjrb.png" alt="Central Logo" className="logo" />
         </div>
-        <div className="login-form-section">
-            <form onSubmit={handleLogin}>
-            <div>
-              <input placeholder='Username' type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
-            </div>
-            <div className="relative">
-              <input 
-                placeholder='Password' 
-                type={passwordVisible ? 'text' : 'password'} 
-                value={password} 
-                onChange={(e) => setPassword(e.target.value)} 
-                required 
-                className="p-2 pl-4 pr-10 w-full border rounded-lg"
-              />
-              <span 
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer pb-3" 
-                onClick={togglePasswordVisibility}
-              >
-                {passwordVisible ? '👁️' : '🙈'}
-              </span>
-            </div>
 
-            <button type="submit">Login</button>
-          </form>
-        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        <div className="login-form-section flex flex-1 justify-center items-center">
+          <div className='login-form bg-white p-8 rounded-lg shadow-lg w-96'>
+            <form onSubmit={handleLogin}>
+                <input placeholder='Username' type="text" value={username} onChange={(e) => setUsername(e.target.value)} required />
+              <div className="relative">
+                <input 
+                  placeholder='Password' 
+                  type={passwordVisible ? 'text' : 'password'} 
+                  value={password} 
+                  onChange={(e) => setPassword(e.target.value)} 
+                  required 
+                  className="p-2 pl-4 pr-10 w-full border rounded-lg"
+                />
+                <span 
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer pb-3" 
+                  onClick={togglePasswordVisibility}
+                >
+                  {passwordVisible ? '👁️' : '🙈'}
+                </span>
+              </div>
+
+              <button type="submit">Login</button>
+            </form>
+          </div>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
 
         {/* Error Modal */}

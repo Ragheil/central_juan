@@ -11,22 +11,40 @@ function Dashboard() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsDropdown, setSettingsDropdown] = useState(false);
   const [employeeCount, setEmployeeCount] = useState(0);
+  const [departmentCount, setDepartmentCount] = useState(0);
 
   useEffect(() => {
-    const fetchEmployeeCount = async () => {
+    const fetchCounts = async () => {
       try {
-        const response = await fetch('http://localhost/central_juan/backend/employeesSide/employees.php?count=true');
-        if (response.ok) {
-          const data = await response.json();
+        // Fetch employee count
+        const employeeResponse = await fetch(
+          'http://localhost/central_juan/backend/employeesSide/employees.php?count=true'
+        );
+        if (employeeResponse.ok) {
+          const data = await employeeResponse.json();
+          console.log('Employee Count Data:', data); // Log the response
           setEmployeeCount(data.total_count);
         } else {
           console.error('Failed to fetch employee count');
         }
+    
+        // Fetch department count
+        const departmentResponse = await fetch(
+          'http://localhost/central_juan/backend/departments/department.php?count=true'
+        );
+        if (departmentResponse.ok) {
+          const departmentData = await departmentResponse.json();
+          console.log('Department Count Data:', departmentData); // Log the response
+          setDepartmentCount(departmentData.total_departments); // Update this line
+        } else {
+          console.error('Failed to fetch department count');
+        }
       } catch (error) {
-        console.error('Error fetching employee count:', error);
+        console.error('Error fetching counts:', error);
       }
     };
-    fetchEmployeeCount();
+
+    fetchCounts();
   }, []);
 
   const handleLogout = () => setShowPopup(true);
@@ -42,7 +60,9 @@ function Dashboard() {
     <div className="dashboard-container flex h-screen bg-gray-100">
       {/* Left Navigation Menu */}
       <div
-        className={`${menuOpen ? 'w-64' : 'w-16'} bg-indigo-700 text-white flex flex-col transition-all duration-300`}
+        className={`${
+          menuOpen ? 'w-64' : 'w-16'
+        } bg-indigo-700 text-white flex flex-col transition-all duration-300`}
       >
         <button
           className="p-4 text-white hover:bg-indigo-600 focus:outline-none"
@@ -102,13 +122,22 @@ function Dashboard() {
         </div>
 
         {/* Dashboard Content */}
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex justify-center items-center min-h-screen bg-gray-100 space-x-8">
           <div
             className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
             onClick={() => navigate('/employees', { state: { user } })}
           >
             <p className="text-lg font-semibold text-center">
               Total Employees: {employeeCount}
+            </p>
+          </div>
+            
+          <div
+            className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+            onClick={() => navigate('/department', { state: { user } })}
+          >
+            <p className="text-lg font-semibold text-center">
+              Total Departments: {departmentCount}
             </p>
           </div>
         </div>

@@ -1,7 +1,6 @@
-// EmployeeModal.jsx
-import React from 'react';
-import PropTypes from 'prop-types'; // Import PropTypes
-import '../../../Styles/components/EmployeeModal.css'; // Optional: Add your styles here
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import '../../../Styles/components/EmployeeModal.css';
 
 const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
   const [newEmployee, setNewEmployee] = React.useState(employee || {
@@ -16,11 +15,31 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
     position_title: '',
   });
 
-  React.useEffect(() => {
+  const [departments, setDepartments] = useState([]);
+
+  useEffect(() => {
     if (employee) {
       setNewEmployee(employee);
     }
   }, [employee]);
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await fetch('http://localhost/central_juan/backend/departments/department.php');
+        const data = await response.json();
+        if (data.status === 'success') {
+          setDepartments(data.data);
+        } else {
+          console.error(data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching departments:', error);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,6 +58,7 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
       <div className="modal-content">
         <h2>{employee ? 'Edit Employee' : 'Add Employee'}</h2>
         <form onSubmit={handleSubmit}>
+          {/* Existing Inputs */}
           <input
             type="text"
             name="employee_id"
@@ -92,13 +112,21 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             onChange={handleChange}
             required
           />
-          <input
-            type="text"
+
+          {/* Dropdown for department_id */}
+          <select
             name="department_id"
-            placeholder="Department ID"
             value={newEmployee.department_id}
             onChange={handleChange}
-          />
+          >
+            <option value="">Select Department</option>
+            {departments.map((dept) => (
+              <option key={dept.department_id} value={dept.department_id}>
+                {dept.department_name}
+              </option>
+            ))}
+          </select>
+
           <input
             type="text"
             name="position_title"
@@ -107,7 +135,9 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             onChange={handleChange}
           />
           <button type="submit">{employee ? 'Update' : 'Add'} Employee</button>
-          <button type="button" onClick={onClose}>Cancel</button>
+          <button type="button" onClick={onClose}>
+            Cancel
+          </button>
         </form>
       </div>
     </div>
@@ -115,10 +145,10 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
 };
 
 EmployeeModal.propTypes = {
-  isOpen: PropTypes.bool.isRequired, // Declare isOpen prop with type bool and make it required
-  onClose: PropTypes.func.isRequired, // Declare onClose prop with type func and make it required
-  onSubmit: PropTypes.func.isRequired, // Declare onSubmit prop with type func and make it required
-  employee: PropTypes.object, // Declare employee prop with type object
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  employee: PropTypes.object,
 };
 
 export default EmployeeModal;

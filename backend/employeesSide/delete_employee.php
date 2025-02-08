@@ -1,5 +1,5 @@
 <?php
-include('connection.php'); // Include your database connection file
+include('../connection.php'); // Include your database connection file
 
 // Set CORS headers
 header("Access-Control-Allow-Origin: *");

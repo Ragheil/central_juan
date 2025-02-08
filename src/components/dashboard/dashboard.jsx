@@ -1,8 +1,8 @@
-import { useSession } from '../context/SessionContext';
+import { useEffect, useState } from 'react';
+import { useSession } from '../../context/SessionContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserIcon, Menu, LogOut, ChevronDown } from 'lucide-react';
-import { useState } from 'react';
-import '../../Styles/dashboard/dashboard.css';
+import '../../../Styles/dashboard/dashboard.css';
 
 function Dashboard() {
   const { user, setUser } = useSession();
@@ -10,27 +10,39 @@ function Dashboard() {
   const [showPopup, setShowPopup] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [settingsDropdown, setSettingsDropdown] = useState(false);
+  const [employeeCount, setEmployeeCount] = useState(0);
 
-  const handleLogout = () => {
-    setShowPopup(true);
-  };
+  useEffect(() => {
+    const fetchEmployeeCount = async () => {
+      try {
+        const response = await fetch('http://localhost/central_juan/backend/employeesSide/employees.php?count=true');
+        if (response.ok) {
+          const data = await response.json();
+          setEmployeeCount(data.total_count);
+        } else {
+          console.error('Failed to fetch employee count');
+        }
+      } catch (error) {
+        console.error('Error fetching employee count:', error);
+      }
+    };
+    fetchEmployeeCount();
+  }, []);
+
+  const handleLogout = () => setShowPopup(true);
 
   const confirmLogout = () => {
     setUser(null);
     navigate('/login');
   };
 
-  const cancelLogout = () => {
-    setShowPopup(false);
-  };
+  const cancelLogout = () => setShowPopup(false);
 
   return (
     <div className="dashboard-container flex h-screen bg-gray-100">
       {/* Left Navigation Menu */}
       <div
-        className={`${
-          menuOpen ? 'w-64' : 'w-16'
-        } bg-indigo-700 text-white flex flex-col transition-all duration-300`}
+        className={`${menuOpen ? 'w-64' : 'w-16'} bg-indigo-700 text-white flex flex-col transition-all duration-300`}
       >
         <button
           className="p-4 text-white hover:bg-indigo-600 focus:outline-none"
@@ -53,6 +65,7 @@ function Dashboard() {
 
       {/* Main Dashboard Content */}
       <div className="flex-1">
+        {/* Dashboard Header */}
         <div className="header-container flex h-20 bg-white items-center justify-between px-4 shadow">
           <h1 className="text-2xl font-semibold">central_juan</h1>
 
@@ -77,10 +90,21 @@ function Dashboard() {
                 </button>
               </div>
             )}
+            
           </div>
+          
         </div>
+        
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+      <div className="bg-white p-8 rounded-2xl shadow-lg">
+        <p className="text-lg font-semibold text-center">
+          Total Employees: {employeeCount}
+        </p>
+      </div>
+    </div>
 
-        {/* Popup Confirmation */}
+
+        {/* Logout Confirmation Popup */}
         {showPopup && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
             <div className="bg-white p-6 rounded-lg shadow-lg">

@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { SessionProvider } from './context/SessionContext'; // Create SessionContext
 import Login from '../src/authentication/login';
-import Dashboard from './dashboard/dashboard';
+import Dashboard from './components/dashboard/dashboard';
 import Employees from './components/employees/employees';
 import Topnav from './components/topnav';
 import '../Styles/App.css';

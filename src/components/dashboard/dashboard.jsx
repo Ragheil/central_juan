@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import { useSession } from '../context/SessionContext';
+import { useSession } from '../../context/SessionContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { UserIcon, Menu, LogOut, ChevronDown } from 'lucide-react';
-import '../../Styles/dashboard/dashboard.css';
+import '../../../Styles/dashboard/dashboard.css';
 
 function Dashboard() {
   const { user, setUser } = useSession();

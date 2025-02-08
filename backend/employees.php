@@ -1,13 +1,18 @@
-<?php
-include('connection.php'); // Include your database connection file
 
-// Enable CORS
+
+<?php 
+include('connection.php'); 
+
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['count'])) {
+    $result = $conn->query("SELECT COUNT(*) AS total_count FROM employees");
+    $data = $result->fetch_assoc();
+    echo json_encode(['total_count' => $data['total_count']]);
+    $conn->close();
+    exit();
+}
 
 // Fetch all employees
 $result = $conn->query("SELECT * FROM employees");
@@ -15,13 +20,10 @@ $employees = [];
 
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $employees[] = $row; // Add each row to the employees array
+        $employees[] = $row;
     }
 }
 
-// Return the employees data as JSON
 echo json_encode($employees);
-
-// Close the database connection
 $conn->close();
 ?>

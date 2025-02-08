@@ -90,19 +90,20 @@ function Dashboard() {
                 </button>
               </div>
             )}
-            
           </div>
-          
         </div>
-        
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-2xl shadow-lg">
-        <p className="text-lg font-semibold text-center">
-          Total Employees: {employeeCount}
-        </p>
-      </div>
-    </div>
 
+        {/* Dashboard Content */}
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+          <div
+            className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+            onClick={() => navigate('/employees', { state: { user } })}
+          >
+            <p className="text-lg font-semibold text-center">
+              Total Employees: {employeeCount}
+            </p>
+          </div>
+        </div>
 
         {/* Logout Confirmation Popup */}
         {showPopup && (

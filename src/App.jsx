@@ -3,6 +3,7 @@ import { SessionProvider } from './context/SessionContext'; // Create SessionCon
 import Login from '../src/authentication/login';
 import Dashboard from './components/dashboard/dashboard';
 import Employees from './components/employees/employees';
+import Department from './components/departments/department';
 import Topnav from './components/topnav';
 import '../Styles/App.css';
 
@@ -16,6 +17,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/employees" element={<Employees />} />
+            <Route path="/department" element={<Department />} />
             <Route path="/" element={<Login />} />
           </Routes>
         </div>

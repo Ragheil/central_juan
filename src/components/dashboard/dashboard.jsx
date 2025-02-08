@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSession } from '../../context/SessionContext';
 import { useNavigate, Link } from 'react-router-dom';
-import { UserIcon, Menu, LogOut, ChevronDown } from 'lucide-react';
+import { UserIcon, Menu, LogOut, ChevronDown, Building } from 'lucide-react';
 import '../../../Styles/dashboard/dashboard.css';
 
 function Dashboard() {
@@ -59,6 +59,14 @@ function Dashboard() {
           >
             <UserIcon size={18} className="mr-3" />
             {menuOpen && <span>Employees</span>}
+          </Link>
+          <Link 
+            to="/department"
+            state={{ user }}
+            className="flex items-center px-4 py-2 hover:bg-indigo-600"
+          >
+            <Building size={18} className="mr-3" />
+            {menuOpen && <span>Department</span>}
           </Link>
         </div>
       </div>

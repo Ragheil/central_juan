@@ -1,26 +1,33 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { SessionProvider } from './context/SessionContext'; // Create SessionContext
-import Login from '../src/authentication/login';
-import Dashboard from './components/dashboard/dashboard';
-import Employees from './components/employees/employees';
-import Topnav from './components/topnav';
-import '../Styles/App.css';
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { useState } from "react";
+import Sidebar from "./components/sidebar.jsx";
+import Dashboard from "./components/dashboard/dashboard";
+import Login from "./authentication/login";
+import Employee from "./components/employees/employees";
 
 function App() {
+  // Simple authentication state
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  // Simulate a successful login by setting the authentication state to true
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
   return (
-    <SessionProvider>
-      <Router>
-        <div className="app-container">
-          <Routes>
-            <Route path="/topnav" element={<Topnav/>} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/employees" element={<Employees />} />
-            <Route path="/" element={<Login />} />
-          </Routes>
-        </div>
-      </Router>
-    </SessionProvider>
+    <Router>
+      <Routes>
+        {/* Login route (show first) */}
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+
+        {/* Redirect to Login if not authenticated, else show Sidebar with content */}
+        <Route path="/" element={isAuthenticated ? <Sidebar /> : <Navigate to="/login" />}>
+          <Route index element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/employees" element={<Employee />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
 

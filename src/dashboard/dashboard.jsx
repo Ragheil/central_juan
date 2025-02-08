@@ -15,7 +15,7 @@ function Dashboard() {
   useEffect(() => {
     const fetchEmployeeCount = async () => {
       try {
-        const response = await fetch('http://localhost/central_juan/backend/employees.php?count=true');
+        const response = await fetch('http://localhost/central_juan/backend/employeesSide/employees.php?count=true');
         if (response.ok) {
           const data = await response.json();
           setEmployeeCount(data.total_count);
@@ -103,7 +103,7 @@ function Dashboard() {
       </div>
     </div>
 
-    
+
         {/* Logout Confirmation Popup */}
         {showPopup && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

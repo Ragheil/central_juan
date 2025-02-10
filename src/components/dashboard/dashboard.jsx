@@ -45,15 +45,14 @@ function Dashboard() {
 
 
   return (
-    <div className="dashboard-container flex h-screen bg-gray-100">
-      {/* Left Navigation Menu */}
+    <div className="dashboard-container flex h-screen justify-center items-center bg-gray-100">
       
 
       {/* Main Dashboard Content */}
-      <div className="flex-1">
+      <div className="flex flex-col justify-center items-center gap-5">
 
         {/* Dashboard Content */}
-        <div className="flex justify-center items-center min-h-screen bg-gray-100 space-x-8">
+        <div className="flex justify-center items-center  bg-gray-100 space-x-8">
           <div
             className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
             onClick={() => navigate('/employees', { state: { user } })}
@@ -71,9 +70,27 @@ function Dashboard() {
               Total Departments: {departmentCount}
             </p>
           </div>
+          
         </div>
-
-        {/* Logout Confirmation Popup */}
+        <div className="flex">
+        <div
+            className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+            onClick={() => navigate('/employees', { state: { user } })}
+          >
+            <p className="text-lg font-semibold text-center">
+              Total Employees: {employeeCount}
+            </p>
+          </div>
+            
+          <div
+            className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+            onClick={() => navigate('/department', { state: { user } })}
+          >
+            <p className="text-lg font-semibold text-center">
+              Total Departments: {departmentCount}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

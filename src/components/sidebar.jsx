@@ -11,6 +11,7 @@ const Sidebar = () => {
   const menuItems = [
     { path: "/dashboard", name: "Dashboard", icon: "📊" },
     { path: "/employees", name: "Employees", icon: "👥" },
+    {path: "/department", name: "Department", icon: "🏢"},
   ];
 
   // Functions for logout modal
@@ -98,7 +99,7 @@ const Sidebar = () => {
         </div>
 
         {/* Dynamic Content (Dashboard, Employees, etc.) */}
-        <div className="flex-1 p-6 overflow-auto">
+        <div className="flex-1  overflow-auto">
           <Outlet />
         </div>
       </div>

@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import DepartmentModal from './DepartmentModal'; // Assume modal component for departments
-//import '../../../Styles/components/departments.css';
+import { useLocation, useNavigate } from 'react-router-dom';
+import DepartmentModal from './DepartmentModal';
 
 function Departments() {
   const { state } = useLocation();
@@ -11,6 +10,12 @@ function Departments() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDepartment, setEditingDepartment] = useState(null);
+
+  const navigate = useNavigate();
+
+
+
+  
   const fetchDepartments = async () => {
     setLoading(true);
     try {
@@ -28,32 +33,26 @@ function Departments() {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    const fetchDepartments = async () => {
-      try {
-        const response = await fetch('http://localhost/central_juan/backend/departments/department.php');
-        const data = await response.json();
-        if (data.message) {
-          alert(data.message);
-        } else {
-          setDepartments(data.data);
-        }
-      } catch (error) {
-        alert('Error fetching department data. Please try again later.');
-        console.error('Error fetching department data:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
 
+  useEffect(() => {
     fetchDepartments();
   }, []);
+
+  const handleViewPositions = (department) => {
+    navigate('/positions', { 
+      state: { 
+        departmentId: department.department_id, 
+        departmentName: department.department_name, 
+        role: user?.role 
+      } 
+    });
+  };
 
   const handleAddOrUpdateDepartment = async (newDepartment) => {
     const url = editingDepartment
       ? 'http://localhost/central_juan/backend/departments/update_department.php'
       : 'http://localhost/central_juan/backend/departments/add_department.php';
-    
+
     const method = editingDepartment ? 'PUT' : 'POST';
 
     try {
@@ -68,7 +67,7 @@ function Departments() {
         alert('Department record successfully saved.');
         setIsModalOpen(false);
         setEditingDepartment(null);
-        fetchDepartments(); // Reload data
+        fetchDepartments();
       } else {
         alert(data.message || 'Failed to save department record.');
       }
@@ -77,28 +76,25 @@ function Departments() {
       console.error('Error saving department:', error);
     }
   };
-  
-  
 
   const handleEditDepartment = (department) => {
     setEditingDepartment(department);
     setIsModalOpen(true);
   };
 
-  // Handle Delete
-const handleDeleteDepartment = async (department_id) => {
+  const handleDeleteDepartment = async (department_id) => {
     if (!window.confirm('Are you sure you want to delete this department?')) return;
-  
+
     try {
       const response = await fetch(`http://localhost/central_juan/backend/departments/delete_department.php?id=${department_id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });
-  
+
       const data = await response.json();
       if (data.success) {
         alert('Department deleted successfully.');
-        fetchDepartments(); // Refresh data
+        fetchDepartments();
       } else {
         alert(data.message || 'Failed to delete department.');
       }
@@ -107,9 +103,6 @@ const handleDeleteDepartment = async (department_id) => {
       console.error('Error deleting department:', error);
     }
   };
-  
-
-  
 
   return (
     <div>
@@ -142,6 +135,7 @@ const handleDeleteDepartment = async (department_id) => {
                   <td>
                     {user?.role === 'ADMIN' && (
                       <>
+                        <button onClick={() => handleViewPositions(department)}>View</button>
                         <button onClick={() => handleEditDepartment(department)}>Edit</button>
                         <button onClick={() => handleDeleteDepartment(department.department_id)}>Delete</button>
                       </>

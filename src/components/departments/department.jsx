@@ -11,7 +11,23 @@ function Departments() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDepartment, setEditingDepartment] = useState(null);
-
+  const fetchDepartments = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost/central_juan/backend/departments/department.php');
+      const data = await response.json();
+      if (data.message) {
+        alert(data.message);
+      } else {
+        setDepartments(data.data);
+      }
+    } catch (error) {
+      alert('Error fetching department data. Please try again later.');
+      console.error('Error fetching department data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
@@ -37,7 +53,7 @@ function Departments() {
     const url = editingDepartment
       ? 'http://localhost/central_juan/backend/departments/update_department.php'
       : 'http://localhost/central_juan/backend/departments/add_department.php';
-
+    
     const method = editingDepartment ? 'PUT' : 'POST';
 
     try {
@@ -49,51 +65,51 @@ function Departments() {
 
       const data = await response.json();
       if (data.success) {
-        if (editingDepartment) {
-          setDepartments(
-            departments.map(dept =>
-              dept.department_id === newDepartment.department_id ? newDepartment : dept
-            )
-          );
-        } else {
-          setDepartments([...departments, { ...newDepartment, department_id: data.department_id }]);
-        }
-        setEditingDepartment(null);
+        alert('Department record successfully saved.');
         setIsModalOpen(false);
-        alert("Department record successfully saved.");
+        setEditingDepartment(null);
+        fetchDepartments(); // Reload data
       } else {
-        alert(data.message || "Failed to save department record.");
+        alert(data.message || 'Failed to save department record.');
       }
     } catch (error) {
-      alert("Error saving department. Please try again later.");
-      console.error("Error saving department:", error);
+      alert('Error saving department. Please try again later.');
+      console.error('Error saving department:', error);
     }
   };
+  
+  
 
   const handleEditDepartment = (department) => {
     setEditingDepartment(department);
     setIsModalOpen(true);
   };
 
-  const handleDeleteDepartment = async (department_id) => {
+  // Handle Delete
+const handleDeleteDepartment = async (department_id) => {
     if (!window.confirm('Are you sure you want to delete this department?')) return;
-
+  
     try {
       const response = await fetch(`http://localhost/central_juan/backend/departments/delete_department.php?id=${department_id}`, {
         method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
       });
-
+  
       const data = await response.json();
       if (data.success) {
-        setDepartments(departments.filter(dept => dept.department_id !== department_id));
+        alert('Department deleted successfully.');
+        fetchDepartments(); // Refresh data
       } else {
-        alert(data.message);
+        alert(data.message || 'Failed to delete department.');
       }
     } catch (error) {
       alert('Error deleting department. Please try again later.');
       console.error('Error deleting department:', error);
     }
   };
+  
+
+  
 
   return (
     <div>

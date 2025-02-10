@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 function DepartmentModal({ isOpen, onClose, onSubmit, department }) {
@@ -17,20 +17,20 @@ function DepartmentModal({ isOpen, onClose, onSubmit, department }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     if (!departmentName.trim() || !departmentId.trim()) {
       alert('Please provide both a department name and a valid ID.');
       return;
     }
-
-
-    
-
+  
     onSubmit({
       department_id: departmentId,
       department_name: departmentName,
     });
+  
+    onClose(); // Close the modal after submission
   };
+  
 
   if (!isOpen) return null;
 

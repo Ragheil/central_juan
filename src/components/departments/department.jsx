@@ -13,9 +13,6 @@ function Departments() {
 
   const navigate = useNavigate();
 
-
-
-  
   const fetchDepartments = async () => {
     setLoading(true);
     try {
@@ -147,9 +144,24 @@ function Departments() {
                   <td className="p-3">
                     {user?.role === 'ADMIN' && (
                       <>
-                        <button onClick={() => handleViewPositions(department)}>View</button>
-                        <button onClick={() => handleEditDepartment(department)}>Edit</button>
-                        <button onClick={() => handleDeleteDepartment(department.department_id)}>Delete</button>
+                        <button
+                          onClick={() => handleViewPositions(department)}
+                          className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 mr-2"
+                        >
+                          View
+                        </button>
+                        <button
+                          onClick={() => handleEditDepartment(department)}
+                          className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 mr-2"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeleteDepartment(department.department_id)}
+                          className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+                        >
+                          Delete
+                        </button>
                       </>
                     )}
                   </td>

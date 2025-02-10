@@ -55,9 +55,9 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
-        <h2>{employee ? 'Edit Employee' : 'Add Employee'}</h2>
-        <form onSubmit={handleSubmit}>
+      <div className="modal-content bg-white rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-semibold mb-4">{employee ? 'Edit Employee' : 'Add Employee'}</h2>
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Existing Inputs */}
           <input
             type="text"
@@ -65,6 +65,7 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             placeholder="Employee ID (optional)"
             value={newEmployee.employee_id}
             onChange={handleChange}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
@@ -73,6 +74,7 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             value={newEmployee.first_name}
             onChange={handleChange}
             required
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
@@ -80,6 +82,7 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             placeholder="Middle Name"
             value={newEmployee.middle_name}
             onChange={handleChange}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
@@ -88,6 +91,7 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             value={newEmployee.last_name}
             onChange={handleChange}
             required
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="email"
@@ -96,6 +100,7 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             value={newEmployee.email}
             onChange={handleChange}
             required
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="text"
@@ -104,6 +109,7 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             value={newEmployee.contact_number}
             onChange={handleChange}
             required
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="date"
@@ -111,6 +117,7 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             value={newEmployee.date_of_birth}
             onChange={handleChange}
             required
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
           {/* Dropdown for department_id */}
@@ -118,6 +125,7 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             name="department_id"
             value={newEmployee.department_id}
             onChange={handleChange}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select Department</option>
             {departments.map((dept) => (
@@ -133,11 +141,23 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             placeholder="Position Title"
             value={newEmployee.position_title}
             onChange={handleChange}
+            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-          <button type="submit">{employee ? 'Update' : 'Add'} Employee</button>
-          <button type="button" onClick={onClose}>
-            Cancel
-          </button>
+          <div className="flex gap-4">
+            <button
+              type="submit"
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 w-full"
+            >
+              {employee ? 'Update' : 'Add'} Employee
+            </button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 w-full"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       </div>
     </div>

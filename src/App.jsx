@@ -21,7 +21,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
            <Route path="/employees" element={<Employees />} /> 
            <Route path="/department" element={<Department />} /> 
-
         </Route>
       </Routes>
       </Router>

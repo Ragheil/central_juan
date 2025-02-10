@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import DepartmentModal from './DepartmentModal'; // Assume modal component for departments
-//import '../../../Styles/components/departments.css';
 
 function Departments() {
   const { state } = useLocation();
@@ -11,36 +10,15 @@ function Departments() {
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDepartment, setEditingDepartment] = useState(null);
-  const fetchDepartments = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch('http://localhost/central_juan/backend/departments/department.php');
-      const data = await response.json();
-      if (data.message) {
-        alert(data.message);
-      } else {
-        setDepartments(data.data);
-      }
-    } catch (error) {
-      alert('Error fetching department data. Please try again later.');
-      console.error('Error fetching department data:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
         const response = await fetch('http://localhost/central_juan/backend/departments/department.php');
         const data = await response.json();
-        if (data.message) {
-          alert(data.message);
-        } else {
-          setDepartments(data.data);
-        }
+        setDepartments(data.data);
       } catch (error) {
-        alert('Error fetching department data. Please try again later.');
-        console.error('Error fetching department data:', error);
+        alert('Error fetching department data.');
       } finally {
         setLoading(false);
       }
@@ -77,24 +55,21 @@ function Departments() {
       console.error('Error saving department:', error);
     }
   };
-  
-  
 
   const handleEditDepartment = (department) => {
     setEditingDepartment(department);
     setIsModalOpen(true);
   };
 
-  // Handle Delete
-const handleDeleteDepartment = async (department_id) => {
+  const handleDeleteDepartment = async (department_id) => {
     if (!window.confirm('Are you sure you want to delete this department?')) return;
-  
+
     try {
       const response = await fetch(`http://localhost/central_juan/backend/departments/delete_department.php?id=${department_id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });
-  
+
       const data = await response.json();
       if (data.success) {
         alert('Department deleted successfully.');
@@ -107,59 +82,78 @@ const handleDeleteDepartment = async (department_id) => {
       console.error('Error deleting department:', error);
     }
   };
-  
-
-  
 
   return (
-    <div>
-      <h1>Departments</h1>
-      <p>Welcome, {user?.username || 'Guest'} (Role: {user?.role || 'N/A'})</p>
+    <div className="p-6">
+      <h1 className="text-2xl font-semibold mb-4">Departments</h1>
 
-      {user?.role === 'ADMIN' && (
-        <button onClick={() => { setEditingDepartment(null); setIsModalOpen(true); }}>
-          Add Department
-        </button>
-      )}
+      <p className="text-gray-600">Welcome, {user?.username || 'Guest'} (Role: {user?.role || 'N/A'})</p>
+
+      {/* Filters & Search */}
+      <div className="flex flex-wrap gap-4 bg-gray-200 p-4 rounded-lg shadow-sm mb-4">
+        <input
+          type="text"
+          placeholder="Search"
+          className="px-3 py-2 border rounded-md w-full md:w-auto"
+        />
+        {user?.role === 'ADMIN' && (
+          <button
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            onClick={() => setIsModalOpen(true)}
+          >
+            + Add Department
+          </button>
+        )}
+      </div>
 
       {loading ? (
-        <p>Loading departments...</p>
+        <p className="text-gray-600">Loading departments...</p>
       ) : (
-        <div>
-          <table className="department-table">
-            <thead>
+        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+          <table className="w-full border-collapse">
+            <thead className="bg-gray-300 text-gray-700">
               <tr>
-                <th>Department ID</th>
-                <th>Department Name</th>
-                <th>Actions</th>
+                <th className="p-3 text-left">Department ID</th>
+                <th className="p-3 text-left">Department Name</th>
+                <th className="p-3 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
               {departments.map(department => (
-                <tr key={department.department_id}>
-                  <td>{department.department_id}</td>
-                  <td>{department.department_name}</td>
-                  <td>
+                <tr key={department.department_id} className="border-t hover:bg-gray-100">
+                  <td className="p-3">{department.department_id}</td>
+                  <td className="p-3">{department.department_name}</td>
+                  <td className="p-3">
                     {user?.role === 'ADMIN' && (
-                      <>
-                        <button onClick={() => handleEditDepartment(department)}>Edit</button>
-                        <button onClick={() => handleDeleteDepartment(department.department_id)}>Delete</button>
-                      </>
+                      <div className="flex space-x-2">
+                        <button
+                          className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
+                          onClick={() => handleEditDepartment(department)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+                          onClick={() => handleDeleteDepartment(department.department_id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     )}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
-
-          <DepartmentModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onSubmit={handleAddOrUpdateDepartment}
-            department={editingDepartment}
-          />
         </div>
       )}
+
+      <DepartmentModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleAddOrUpdateDepartment}
+        department={editingDepartment}
+      />
     </div>
   );
 }

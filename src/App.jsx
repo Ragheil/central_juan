@@ -6,6 +6,7 @@ import Sidebar from './components/sidebar';
 import Employees from './components/employees/employees';
 import Department from './components/departments/department';
 import Positions from './components/departments/positions/positions';
+import Attendance from './components/attendance/attendance';
 import '../Styles/App.css';
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
            <Route path="/employees" element={<Employees />} /> 
            <Route path="/department" element={<Department />} /> 
            <Route path="/positions" element={<Positions />} /> 
+           <Route path="/attendance" element={<Attendance />} /> 
+
 
 
         </Route>

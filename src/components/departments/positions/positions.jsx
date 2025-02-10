@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import PositionModal from './PositionModal'; // Assume this modal component exists
+import PositionModal from './PositionModal'; 
 
 function Positions() {
   const { state } = useLocation();
-  const user = state?.user;
   const { departmentId, departmentName, role } = state || {};
 
   const [positions, setPositions] = useState([]);
@@ -16,7 +15,9 @@ function Positions() {
   const fetchPositions = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost/central_juan/backend/departments/positions/positions.php?department_id=${departmentId}`);
+      const response = await fetch(
+        `http://localhost/central_juan/backend/departments/positions/positions.php?department_id=${departmentId}`
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -40,19 +41,24 @@ function Positions() {
 
   // Handle Add/Update
   const handleAddOrUpdatePosition = async (newPosition) => {
+    const payload = {
+      ...newPosition,
+      department_id: departmentId,
+    };
+
     const url = editingPosition
       ? 'http://localhost/central_juan/backend/departments/positions/update_positions.php'
       : 'http://localhost/central_juan/backend/departments/positions/add_positions.php';
-  
+
     const method = editingPosition ? 'PUT' : 'POST';
-  
+
     try {
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newPosition),  // Ensure department ID is included in payload
+        body: JSON.stringify(payload),
       });
-  
+
       const data = await response.json();
       if (data.status === 'success') {
         alert('Position record successfully saved.');
@@ -67,7 +73,6 @@ function Positions() {
       console.error('Error saving position:', error);
     }
   };
-  
 
   // Handle Edit
   const handleEditPosition = (position) => {
@@ -80,15 +85,15 @@ function Positions() {
     if (!window.confirm('Are you sure you want to delete this position?')) return;
 
     try {
-      const response = await fetch(`http://localhost/central_juan/backend/departments/positions/delete_positions.php?id=${position_id}`, {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await fetch(
+        `http://localhost/central_juan/backend/departments/positions/delete_positions.php?id=${position_id}`,
+        { method: 'DELETE' }
+      );
 
       const data = await response.json();
       if (data.status === 'success') {
         alert('Position deleted successfully.');
-        fetchPositions(); // Refresh data
+        fetchPositions();
       } else {
         alert(data.message || 'Failed to delete position.');
       }
@@ -148,6 +153,7 @@ function Positions() {
             onClose={() => setIsModalOpen(false)}
             onSubmit={handleAddOrUpdatePosition}
             position={editingPosition}
+            departmentId={departmentId}
           />
         </div>
       )}

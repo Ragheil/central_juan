@@ -1,14 +1,27 @@
 <?php
-header('Content-Type: application/json');
+// Allow CORS from any origin
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+// Handle preflight requests
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+header("Content-Type: application/json");
 include('../../connection.php');
 
+// Get department ID from request
 $departmentId = $_GET['department_id'] ?? '';
 
 if (empty($departmentId)) {
-    echo json_encode(["message" => "Department ID is required"]);
+    echo json_encode(["success" => false, "message" => "Department ID is required"]);
     exit;
 }
 
+// Prepare SQL statement
 $stmt = $conn->prepare("SELECT position_id, position_name FROM positions WHERE department_id = ?");
 $stmt->bind_param("s", $departmentId);
 
@@ -20,9 +33,9 @@ if ($stmt->execute()) {
         $positions[] = $row;
     }
 
-    echo json_encode($positions);
+    echo json_encode(["success" => true, "data" => $positions]);
 } else {
-    echo json_encode(["message" => "Query failed"]);
+    echo json_encode(["success" => false, "message" => "Query failed"]);
 }
 
 $stmt->close();

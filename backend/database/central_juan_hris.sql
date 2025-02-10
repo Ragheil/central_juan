@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 07, 2025 at 08:38 AM
+-- Generation Time: Feb 10, 2025 at 06:21 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -70,10 +70,12 @@ CREATE TABLE `departments` (
 --
 
 INSERT INTO `departments` (`department_id`, `department_name`) VALUES
-('DEP-001', 'Finance'),
-('DEP-002', 'Human Resources'),
-('DEP-003', 'IT Department'),
-('DEP-004', 'tarantado');
+('as', 'as'),
+('DEP-001', 'IT Department'),
+('DEP-002', 'Kupal'),
+('DEP-003', 'TARANTADO'),
+('DEP-004', 'Mage'),
+('DEP-005', 'Haduken');
 
 -- --------------------------------------------------------
 
@@ -90,18 +92,18 @@ CREATE TABLE `employees` (
   `contact_number` varchar(20) DEFAULT NULL,
   `date_of_birth` date DEFAULT NULL,
   `department_id` varchar(11) DEFAULT NULL,
-  `position_title` varchar(100) DEFAULT NULL
+  `position_id` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `employees`
 --
 
-INSERT INTO `employees` (`employee_id`, `first_name`, `middle_name`, `last_name`, `email`, `contact_number`, `date_of_birth`, `department_id`, `position_title`) VALUES
-('CJIS-2025-0001', 'kidor sad', 'lajhjhggat', 'atacado', 'ragheil132@adsgmail.com', '734834', '2025-02-05', 'DEP-002', 'ulolsadds'),
-('CJIS-2025-0002', 'test1', 'test', 'test1', 'tst@gmail.com', '213123', '2025-02-07', 'DEP-001', 'asd'),
-('CJIS-2025-0003', 'fghs1', 'fghs', 'fghss1', 'sfssgh@gmail.com', '87872', '2025-02-28', 'DEP-002', 'slkjj'),
-('CJIS-2025-0004', 'rtyhkj', 'rty', 'rtyhjk', 'rty@gmail.com', 'ads', '2025-02-08', 'DEP-003', 'asd');
+INSERT INTO `employees` (`employee_id`, `first_name`, `middle_name`, `last_name`, `email`, `contact_number`, `date_of_birth`, `department_id`, `position_id`) VALUES
+('CJIS-2025-0001', 'kidorsadg', 'lajhjhgatg', 'atacadog', 'ragheil123@gmail.com', '734834', '2025-02-08', 'DEP-005', 'POS-001'),
+('CJIS-2025-0002', 'test1', 'test', 'test1', 'tst@gmail.com', '213123', '2025-02-07', 'DEP-001', NULL),
+('CJIS-2025-0003', 'fghs1', 'fghs', 'fghss1', 'sfssgh@gmail.com', '87872', '2025-02-28', 'DEP-002', NULL),
+('CJIS-2025-0004', 'rtyhkj', 'rty', 'rtyhjk', 'rty@gmail.com', 'ads', '2025-02-08', 'DEP-003', NULL);
 
 -- --------------------------------------------------------
 
@@ -117,6 +119,30 @@ CREATE TABLE `payslips` (
   `total_days` int(11) DEFAULT NULL,
   `total_salary` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `positions`
+--
+
+CREATE TABLE `positions` (
+  `position_id` varchar(50) NOT NULL,
+  `position_name` varchar(255) NOT NULL,
+  `department_id` varchar(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `positions`
+--
+
+INSERT INTO `positions` (`position_id`, `position_name`, `department_id`) VALUES
+('damn-21', 'ulol-as', 'DEP-002'),
+('edit-tika-4', 'yes sir-45', 'DEP-002'),
+('POS-001', 'Manager', 'DEP-001'),
+('POS-002', 'Developer', NULL),
+('POS-003', 'Accountant', NULL),
+('POS-5', 'IT Department', 'DEP-003');
 
 -- --------------------------------------------------------
 
@@ -197,7 +223,8 @@ ALTER TABLE `departments`
 ALTER TABLE `employees`
   ADD PRIMARY KEY (`employee_id`),
   ADD UNIQUE KEY `email` (`email`),
-  ADD KEY `department_id` (`department_id`);
+  ADD KEY `department_id` (`department_id`),
+  ADD KEY `fk_position` (`position_id`);
 
 --
 -- Indexes for table `payslips`
@@ -205,6 +232,13 @@ ALTER TABLE `employees`
 ALTER TABLE `payslips`
   ADD PRIMARY KEY (`payslip_id`),
   ADD KEY `employee_id` (`employee_id`);
+
+--
+-- Indexes for table `positions`
+--
+ALTER TABLE `positions`
+  ADD PRIMARY KEY (`position_id`),
+  ADD KEY `fk_department` (`department_id`);
 
 --
 -- Indexes for table `salary_grades`
@@ -274,13 +308,20 @@ ALTER TABLE `attendance`
 -- Constraints for table `employees`
 --
 ALTER TABLE `employees`
-  ADD CONSTRAINT `employees_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
+  ADD CONSTRAINT `employees_ibfk_1` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`),
+  ADD CONSTRAINT `fk_position` FOREIGN KEY (`position_id`) REFERENCES `positions` (`position_id`);
 
 --
 -- Constraints for table `payslips`
 --
 ALTER TABLE `payslips`
   ADD CONSTRAINT `payslips_ibfk_1` FOREIGN KEY (`employee_id`) REFERENCES `employees` (`employee_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `positions`
+--
+ALTER TABLE `positions`
+  ADD CONSTRAINT `fk_department` FOREIGN KEY (`department_id`) REFERENCES `departments` (`department_id`);
 
 --
 -- Constraints for table `salary_grades`

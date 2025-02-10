@@ -11,7 +11,7 @@ const Sidebar = () => {
   const menuItems = [
     { path: "/dashboard", name: "Dashboard", icon: "📊" },
     { path: "/employees", name: "Employees", icon: "👥" },
-    {path: "/department", name: "Department", icon: "🏢"},
+    {path: "/department", name: "Department", icon: "🏢"}
   ];
 
   // Functions for logout modal
@@ -35,15 +35,7 @@ const Sidebar = () => {
       {/* Header with search bar and settings */}
       <header className="bg-blue-600 text-white p-4 flex items-center justify-between">
         <h1 className="text-2xl font-bold">My App</h1>
-
-        {/* Search Bar */}
-        <div className="flex items-center w-full max-w-xl">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="px-4 py-2 rounded-md bg-white text-black w-full"
-          />
-        </div>
+        
 
         {/* Settings Dropdown Button */}
         <div className="relative ml-auto">

@@ -11,6 +11,7 @@ function Login() {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const { setUser } = useSession();
+  const bgmainLogin = '/src/assets/bg_mainlogin.jpg';
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -38,17 +39,19 @@ function Login() {
   };
 
   return (
-    <div className="login-container flex bg-blue-800 flex-row h-screen w-screen"> 
-      <div className='logo-container flex flex-col flex-1 justify-center items-center bg-white'>
-        <div className='sm:w-30 md:w-50 lg:w-50 pb-50'>
-          <img src="../../src/assets/cjrb.png" alt="Central Logo"/>
-        </div>
-        <div className='w-sm italic text-center justify-center font-bold items-center'>
-          <h2>Central Juan IT Solutions offers a full breadth of products and services that boast quality, reliability, and the most value in their category supplied only by leading IT companies.</h2>
+    <div className="login-container flex flex-row h-screen w-screen"> 
+      <div className='flex flex-2 bg-[url(${bgmainLogin})] bg-no-repeat bg-cover '>
+        <div className=' logo-container flex flex-col flex-2 justify-center items-center'>
+          <div className='sm:w-30 md:w-50 lg:w-50 pb-50'>
+            <img src="../../src/assets/cjrb.png" alt="Central Logo"/>
+          </div>
+          <div className='w-sm italic text-center justify-center font-bold items-center'>
+            <h2>Central Juan IT Solutions offers a full breadth of products and services that boast quality, reliability, and the most value in their category supplied only by leading IT companies.</h2>
+          </div>
         </div>
       </div>
 
-      <div className="login-form-section flex-col flex flex-1 justify-center items-center">
+      <div className="login-form-section flex-col bg-[url('/src/assets/bg_login.png')]  rounded-l-3xl flex flex-1 justify-center items-center">
       <div className="HRIS text-2xl colo pb-5 text-white text-5xl">
         <h1 className=''>HRIS!</h1>
       </div>

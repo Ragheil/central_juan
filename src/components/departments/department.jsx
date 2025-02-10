@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
-import DepartmentModal from './DepartmentModal'; // Assume modal component for departments
+import { useLocation, useNavigate } from 'react-router-dom';
+import DepartmentModal from './DepartmentModal';
 
 function Departments() {
   const { state } = useLocation();
@@ -11,27 +11,48 @@ function Departments() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingDepartment, setEditingDepartment] = useState(null);
 
-  useEffect(() => {
-    const fetchDepartments = async () => {
-      try {
-        const response = await fetch('http://localhost/central_juan/backend/departments/department.php');
-        const data = await response.json();
-        setDepartments(data.data);
-      } catch (error) {
-        alert('Error fetching department data.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  const navigate = useNavigate();
 
+
+
+  
+  const fetchDepartments = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch('http://localhost/central_juan/backend/departments/department.php');
+      const data = await response.json();
+      if (data.message) {
+        alert(data.message);
+      } else {
+        setDepartments(data.data);
+      }
+    } catch (error) {
+      alert('Error fetching department data. Please try again later.');
+      console.error('Error fetching department data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchDepartments();
   }, []);
+
+  const handleViewPositions = (department) => {
+    navigate('/positions', { 
+      state: { 
+        departmentId: department.department_id, 
+        departmentName: department.department_name, 
+        role: user?.role 
+      } 
+    });
+  };
 
   const handleAddOrUpdateDepartment = async (newDepartment) => {
     const url = editingDepartment
       ? 'http://localhost/central_juan/backend/departments/update_department.php'
       : 'http://localhost/central_juan/backend/departments/add_department.php';
-    
+
     const method = editingDepartment ? 'PUT' : 'POST';
 
     try {
@@ -46,7 +67,7 @@ function Departments() {
         alert('Department record successfully saved.');
         setIsModalOpen(false);
         setEditingDepartment(null);
-        fetchDepartments(); // Reload data
+        fetchDepartments();
       } else {
         alert(data.message || 'Failed to save department record.');
       }
@@ -73,7 +94,7 @@ function Departments() {
       const data = await response.json();
       if (data.success) {
         alert('Department deleted successfully.');
-        fetchDepartments(); // Refresh data
+        fetchDepartments();
       } else {
         alert(data.message || 'Failed to delete department.');
       }
@@ -125,20 +146,11 @@ function Departments() {
                   <td className="p-3">{department.department_name}</td>
                   <td className="p-3">
                     {user?.role === 'ADMIN' && (
-                      <div className="flex space-x-2">
-                        <button
-                          className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
-                          onClick={() => handleEditDepartment(department)}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
-                          onClick={() => handleDeleteDepartment(department.department_id)}
-                        >
-                          Delete
-                        </button>
-                      </div>
+                      <>
+                        <button onClick={() => handleViewPositions(department)}>View</button>
+                        <button onClick={() => handleEditDepartment(department)}>Edit</button>
+                        <button onClick={() => handleDeleteDepartment(department.department_id)}>Delete</button>
+                      </>
                     )}
                   </td>
                 </tr>

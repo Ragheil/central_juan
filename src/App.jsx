@@ -3,8 +3,9 @@ import { SessionProvider } from './context/SessionContext'; // Create SessionCon
 import Login from '../src/authentication/login';
 import Dashboard from './components/dashboard/dashboard';
 import Sidebar from './components/sidebar';
- import Employees from './components/employees/employees';
- import Department from './components/departments/department';
+import Employees from './components/employees/employees';
+import Department from './components/departments/department';
+import Positions from './components/departments/positions/positions';
 import '../Styles/App.css';
 
 function App() {
@@ -21,6 +22,9 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
            <Route path="/employees" element={<Employees />} /> 
            <Route path="/department" element={<Department />} /> 
+           <Route path="/positions" element={<Positions />} /> 
+
+
         </Route>
       </Routes>
       </Router>

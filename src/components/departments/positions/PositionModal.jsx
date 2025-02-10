@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import /*React,*/ { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 
-// Custom modal styles
 const customStyles = {
   content: {
     top: '50%',
@@ -22,37 +21,46 @@ const PositionModal = ({ isOpen, onClose, onSubmit, position, departmentId }) =>
   const [positionId, setPositionId] = useState('');
   const [positionName, setPositionName] = useState('');
 
+  // Reset input fields based on modal visibility or position changes
   useEffect(() => {
-    if (position) {
-      setPositionId(position.position_id || '');
-      setPositionName(position.position_name || '');
-    } else {
-      setPositionId('');
-      setPositionName('');
+    if (isOpen) {
+      setPositionId(position?.position_id || '');
+      setPositionName(position?.position_name || '');
     }
-  }, [position]);
+  }, [isOpen, position]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     if (!positionId.trim()) {
       alert('Position ID cannot be empty.');
       return;
     }
-
+  
     if (!positionName.trim()) {
       alert('Position name cannot be empty.');
       return;
     }
-
+  
+    // Prepare the new position data
     const newPosition = {
-      position_id: positionId.trim(),
+      new_position_id: positionId.trim(),
       position_name: positionName.trim(),
-      department_id: departmentId, // Automatically assign department ID
     };
-
-    onSubmit(newPosition);
+  
+    // Include your `positionData`
+    const positionData = {
+      position_id: position?.position_id || '',
+      new_position_id: newPosition.new_position_id,
+      position_name: newPosition.position_name,
+      department_id: departmentId,
+    };
+  
+    // Submit the complete data object
+    onSubmit(positionData);
+    onClose(); // Ensure modal closes after submission
   };
+  
 
   return (
     <Modal
@@ -62,7 +70,6 @@ const PositionModal = ({ isOpen, onClose, onSubmit, position, departmentId }) =>
       contentLabel="Position Modal"
     >
       <h2>{position ? 'Edit Position' : 'Add New Position'}</h2>
-
       <form onSubmit={handleSubmit}>
         <label>
           Position ID:
@@ -74,7 +81,6 @@ const PositionModal = ({ isOpen, onClose, onSubmit, position, departmentId }) =>
             required
           />
         </label>
-
         <label style={{ display: 'block', marginTop: '10px' }}>
           Position Name:
           <input
@@ -85,7 +91,6 @@ const PositionModal = ({ isOpen, onClose, onSubmit, position, departmentId }) =>
             required
           />
         </label>
-
         <div style={{ marginTop: '15px' }}>
           <button type="submit">
             {position ? 'Update Position' : 'Add Position'}
@@ -100,12 +105,11 @@ const PositionModal = ({ isOpen, onClose, onSubmit, position, departmentId }) =>
 };
 
 PositionModal.propTypes = {
-    isOpen: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired,
-    position: PropTypes.object,
-    departmentId: PropTypes.string, // No longer required
-  };
-  
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  position: PropTypes.object,
+  departmentId: PropTypes.string,
+};
 
 export default PositionModal;

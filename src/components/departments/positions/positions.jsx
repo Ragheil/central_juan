@@ -43,17 +43,28 @@ function Positions() {
     const url = editingPosition
       ? 'http://localhost/central_juan/backend/departments/positions/update_positions.php'
       : 'http://localhost/central_juan/backend/departments/positions/add_positions.php';
-
+  
     const method = editingPosition ? 'PUT' : 'POST';
-
+  
+    const payload = editingPosition
+      ? { 
+          position_id: editingPosition.position_id, 
+          new_position_id: newPosition.position_id, 
+          position_name: newPosition.position_name 
+        }
+      : { 
+          position_name: newPosition.position_name, 
+          department_id: departmentId 
+        };
+  
     try {
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...newPosition, department_id: departmentId }), // Attach department ID
+        body: JSON.stringify(payload),
       });
-
-      const data = await response.json();   
+  
+      const data = await response.json();
       if (data.status === 'success') {
         alert('Position record successfully saved.');
         setIsModalOpen(false);
@@ -67,6 +78,7 @@ function Positions() {
       console.error('Error saving position:', error);
     }
   };
+  
 
   // Handle Edit
   const handleEditPosition = (position) => {

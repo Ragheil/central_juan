@@ -12,10 +12,11 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
     contact_number: '',
     date_of_birth: '',
     department_id: '',
-    position_title: '',
+    position_id: '',
   });
 
   const [departments, setDepartments] = useState([]);
+  const [positions, setPositions] = useState([]);
 
   useEffect(() => {
     if (employee) {
@@ -23,10 +24,11 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
     }
   }, [employee]);
 
+  // Fetch departments
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        const response = await fetch('http://localhost/central_juan/backend/departments/department.php');
+        const response = await fetch('http://10.0.254.104/central_juan/backend/departments/department.php');
         const data = await response.json();
         if (data.status === 'success') {
           setDepartments(data.data);
@@ -40,6 +42,30 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
 
     fetchDepartments();
   }, []);
+
+  // Fetch positions
+  // Fetch positions
+useEffect(() => {
+  const fetchPositions = async () => {
+    try {
+      const response = await fetch('http://10.0.254.104/central_juan/backend/departments/positions/fetch_positions.php');
+      const data = await response.json();
+      console.log(data); // Log the data to see its structure
+      // Check if data is an array
+      if (Array.isArray(data)) {
+        setPositions(data);
+      } else {
+        console.error('Unexpected response format:', data);
+        setPositions([]); // Set to empty array if the format is not as expected
+      }
+    } catch (error) {
+      console.error('Error fetching positions:', error);
+      setPositions([]);
+    }
+  };
+
+  fetchPositions();
+}, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -58,7 +84,6 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
       <div className="modal-content bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-semibold mb-4">{employee ? 'Edit Employee' : 'Add Employee'}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Existing Inputs */}
           <input
             type="text"
             name="employee_id"
@@ -119,8 +144,8 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             required
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
-
-          {/* Dropdown for department_id */}
+          
+          {/* Department Picker */}
           <select
             name="department_id"
             value={newEmployee.department_id}
@@ -135,14 +160,21 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             ))}
           </select>
 
-          <input
-            type="text"
-            name="position_title"
-            placeholder="Position Title"
-            value={newEmployee.position_title}
+          {/* Position Picker */}
+          <select
+            name="position_id"
+            value={newEmployee.position_id}
             onChange={handleChange}
             className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          >
+            <option value="">Select Position</option>
+            {positions.map((pos) => (
+              <option key={pos.position_id} value={pos.position_id}>
+                {pos.position_name}
+              </option>
+            ))}
+          </select>
+
           <div className="flex gap-4">
             <button
               type="submit"

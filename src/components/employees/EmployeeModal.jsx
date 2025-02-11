@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import '../../../Styles/components/EmployeeModal.css';
 
 const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
-  const [newEmployee, setNewEmployee] = React.useState(employee || {
+  const [newEmployee, setNewEmployee] = useState(employee || {
     employee_id: '',
     first_name: '',
     middle_name: '',
@@ -44,28 +44,26 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
   }, []);
 
   // Fetch positions
-  // Fetch positions
-useEffect(() => {
-  const fetchPositions = async () => {
-    try {
-      const response = await fetch('http://10.0.254.104/central_juan/backend/departments/positions/fetch_positions.php');
-      const data = await response.json();
-      console.log(data); // Log the data to see its structure
-      // Check if data is an array
-      if (Array.isArray(data)) {
-        setPositions(data);
-      } else {
-        console.error('Unexpected response format:', data);
-        setPositions([]); // Set to empty array if the format is not as expected
+  useEffect(() => {
+    const fetchPositions = async () => {
+      try {
+        const response = await fetch('http://10.0.254.104/central_juan/backend/departments/positions/fetch_positions.php');
+        const data = await response.json();
+        console.log(data); // Log the data to see its structure
+        if (Array.isArray(data)) {
+          setPositions(data);
+        } else {
+          console.error('Unexpected response format:', data);
+          setPositions([]);
+        }
+      } catch (error) {
+        console.error('Error fetching positions:', error);
+        setPositions([]);
       }
-    } catch (error) {
-      console.error('Error fetching positions:', error);
-      setPositions([]);
-    }
-  };
+    };
 
-  fetchPositions();
-}, []);
+    fetchPositions();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,7 +72,26 @@ useEffect(() => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Basic validation
+    if (!newEmployee.first_name || !newEmployee.last_name || !newEmployee.email || !newEmployee.contact_number) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
     onSubmit(newEmployee);
+    // Reset the form after submission
+    setNewEmployee({
+      employee_id: '',
+      first_name: '',
+      middle_name: '',
+      last_name: '',
+      email: '',
+      contact_number: '',
+      date_of_birth: '',
+      department_id: '',
+      position_id: '',
+    });
   };
 
   if (!isOpen) return null;

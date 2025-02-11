@@ -55,13 +55,32 @@ function Dashboard() {
         </div>
       </div>
       <div className='dashboard_content flex-row flex flex-4'>  
+        
         <div className='date_task_right flex flex-1 m-1 w-full h-full bg-amber-50'>
 
         </div>
         <div className='left_container flex flex-2 m-1 w-full h-full bg-amber-50'>
-          <div className='right_container flex w-full h-full flex-col'>
+        <div className="flex justify-center items-center  bg-gray-100 space-x-8">
+           <div
+            className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+            onClick={() => navigate('/employees', { state: { user } })}
+          >
+            <p className="text-lg font-semibold text-center">
+              Total Employees: {employeeCount}
+            </p>
+          </div>
+            
+          <div
+            className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+            onClick={() => navigate('/department', { state: { user } })}
+          >
+            <p className="text-lg font-semibold text-center">
+              Total Departments: {departmentCount}
+            </p>
+          </div>
+          
+        </div>          
             <div className='top_container flex flex-1 m-1 bg-amber-950'>
-
             </div>
             <div className='low_container flex flex-1 m-1 bg-amber-950'>
 
@@ -70,7 +89,7 @@ function Dashboard() {
           
         </div>
       </div>
-    </div>
+    //</div>
     // <div className="dashboard-container flex h-screen justify-center items-center bg-gray-100">
       
 

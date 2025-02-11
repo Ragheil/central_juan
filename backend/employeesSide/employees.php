@@ -36,8 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['count'])) {
 }
 
 // Fetch all employees
-$query = "SELECT * FROM employees";
-$result = $conn->query($query);
+$query = "SELECT e.employee_id, e.first_name, e.middle_name, e.last_name, e.email, 
+                 e.contact_number, e.date_of_birth, e.department_id, d.department_name, 
+                 e.position_id, p.position_name
+          FROM employees e
+          LEFT JOIN departments d ON e.department_id = d.department_id
+          LEFT JOIN positions p ON e.position_id = p.position_id";$result = $conn->query($query);
 
 if ($result) {
     $employees = $result->fetch_all(MYSQLI_ASSOC);

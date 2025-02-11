@@ -23,7 +23,7 @@ if ($method === 'POST') {
     if (
         isset($data->employee_id, $data->first_name, $data->middle_name, $data->last_name, 
               $data->email, $data->contact_number, $data->date_of_birth, 
-              $data->department_id, $data->position_title)
+              $data->department_id, $data->position_id)
     ) {
         $employee_id = $data->employee_id;
         $first_name = $data->first_name;
@@ -33,18 +33,21 @@ if ($method === 'POST') {
         $contact_number = $data->contact_number;
         $date_of_birth = $data->date_of_birth;
         $department_id = $data->department_id;
-        $position_title = $data->position_title;
+        $position_id = $data->position_id;
 
-        // Prepare the SQL query with employee_id
+        // Validate data
+      
+
+        // Prepare the SQL query with position_id
         $stmt = $conn->prepare(
             "INSERT INTO employees 
-            (employee_id, first_name, middle_name, last_name, email, contact_number, date_of_birth, department_id, position_title) 
+            (employee_id, first_name, middle_name, last_name, email, contact_number, date_of_birth, department_id, position_id) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
         );
 
         // Bind the parameters for the SQL statement
         $stmt->bind_param("sssssssss", $employee_id, $first_name, $middle_name, $last_name, 
-                          $email, $contact_number, $date_of_birth, $department_id, $position_title);
+                          $email, $contact_number, $date_of_birth, $department_id, $position_id);
 
         // Execute the query and check if it was successful
         if ($stmt->execute()) {

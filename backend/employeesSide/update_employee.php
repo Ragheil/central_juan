@@ -16,16 +16,34 @@ if (!$data || empty($data['employee_id'])) {
     exit;
 }
 
-$stmt = $conn->prepare("UPDATE employees SET first_name=?, middle_name=?, last_name=?, email=?, contact_number=?, date_of_birth=?, department_id=?, position_title=? WHERE employee_id=?");
+$stmt = $conn->prepare(
+    "UPDATE employees SET 
+    employee_id = ?, 
+    first_name = ?, 
+    middle_name = ?, 
+    last_name = ?, 
+    email = ?, 
+    contact_number = ?, 
+    department_id = ?, 
+    position_id = ? 
+    WHERE employee_id = ?"
+);
+
 $stmt->bind_param(
     "sssssssss", 
-    $data['first_name'], $data['middle_name'], $data['last_name'], $data['email'], $data['contact_number'], $data['date_of_birth'], $data['department_id'], $data['position_title'], $data['employee_id']);
-
-
-
+    $data['employee_id'], 
+    $data['first_name'], 
+    $data['middle_name'], 
+    $data['last_name'], 
+    $data['email'], 
+    $data['contact_number'], 
+    $data['department_id'], 
+    $data['position_id'], 
+    $data['employee_id']
+);
 
 if ($stmt->execute()) {
-    echo json_encode(['success' => true]);
+    echo json_encode(['success' => true, 'message' => "Employee with ID {$data['employee_id']} updated successfully."]);
 } else {
     echo json_encode(['success' => false, 'message' => $stmt->error]);
 }

@@ -1,121 +1,109 @@
-import { useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom"; // Import useNavigate
-import { ChevronDown, LogOut } from "lucide-react"; 
+//new sidebar
+import React, { useState } from "react";
+import { Link, useNavigate, useLocation, Outlet } from "react-router-dom"; // Include Outlet here
+import { LogOut } from "lucide-react"; // Assuming you're using lucide-react for the logout icon
 
-const Sidebar = () => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [settingsDropdown, setSettingsDropdown] = useState(false);
+const Navbar = () => {
+  const [showSettingsDropdown, setShowSettingsDropdown] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  // Define menu items for navigation
   const menuItems = [
-    { path: "/dashboard", name: "Dashboard", icon: "📊" },
-    { path: "/employees", name: "Employees", icon: "👥" },
-    {path: "/department", name: "Department", icon: "🏢"},
-    { path: "/attendance", name: "attendance", icon: "📅" },
-   
+    { name: "Dashboard", path: "/dashboard" },
+    { name: "Employee", path: "/employees" },
+    { name: "Attendance", path: "/attendance" },
+    { name: "Department", path: "/department" },
   ];
 
-  // Functions for logout modal
-  const openLogoutModal = () => setShowLogoutModal(true);
-  const cancelLogout = () => setShowLogoutModal(false);
+  const toggleSettingsDropdown = () => setShowSettingsDropdown(!showSettingsDropdown); // Toggle dropdown visibility
 
+  const openLogoutModal = () => setShowLogoutModal(true); // Open logout confirmation modal
+  const cancelLogout = () => setShowLogoutModal(false); // Cancel logout
   const confirmLogout = () => {
-    // 1. Clear stored authentication data (localStorage/sessionStorage)
-    localStorage.removeItem("token"); // Replace "token" with your auth key
+    localStorage.removeItem("token");
     sessionStorage.removeItem("user");
-
-    // 2. Redirect to login page
     navigate("/login");
-
-    // 3. Close the modal
     setShowLogoutModal(false);
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      {/* Header with search bar and settings */}
-      <header className="bg-blue-600 text-white p-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">My App</h1>
-        
+<div className="flex flex-col h-screen">
+  {/* Navbar */}
+  <div className=" text-white p-4 flex justify-between items-center">
+    {/* Left Section: Logo */}
+    <div className="flex items-center">
+      <img src="/src/assets/cjrb.png" alt="Logo" className="w-20 h-20" />
+    </div>
 
-        {/* Settings Dropdown Button */}
-        <div className="relative ml-auto">
-          <button
-            onClick={() => setSettingsDropdown(!settingsDropdown)}
-            className="flex items-center bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded-lg text-black"
+    {/* Middle Section: Navigation Links */}
+    <div className="flex justify-end flex-2 ml-4 mr-4">
+      <nav className="flex space-x-4 bg-gray-600 p-3 rounded-full">
+        {menuItems.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`px-4 py-2 rounded-full text-white transition-all duration-300 ${
+              location.pathname === item.path ? "bg-black" : "bg-gray-600 hover:bg-gray-500"
+            }`}
           >
-            <span>Settings</span>
-            <ChevronDown size={18} className="ml-2" />
+            {item.name}
+          </Link>
+        ))}
+      </nav>
+    </div>
+
+    {/* Right Section: Settings Button */}
+    <div className="relative">
+      <button
+        onClick={toggleSettingsDropdown}
+        className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center"
+      >
+        <span>Settings</span>
+      </button>
+
+      {/* Settings Dropdown */}
+      {showSettingsDropdown && (
+        <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded-lg shadow-lg">
+          <button
+            onClick={openLogoutModal}
+            className="w-full text-left px-4 py-2 hover:bg-gray-100 rounded-t-lg flex items-center"
+          >
+            <LogOut size={18} className="mr-2" /> Log Out
           </button>
-
-          {settingsDropdown && (
-            <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md">
-              <button
-                onClick={openLogoutModal}
-                className="flex items-center w-full px-4 py-2 hover:bg-gray-100"
-              >
-                <LogOut size={18} className="mr-3" />
-                Log Out
-              </button>
-            </div>
-          )}
-        </div>
-      </header>
-
-      <div className="flex flex-1">
-        {/* Sidebar */}
-        <div
-          className={`h-full bg-blue-600 text-white transition-all duration-300 ${
-            isHovered ? "w-48" : "w-16"
-          }`}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          {/* Logo */}
-          <div className="flex items-center justify-center h-16">
-            <h1 className="text-2xl font-bold">{isHovered ? "Logo" : "⚡"}</h1>
-          </div>
-
-          {/* Menu Items */}
-          <nav className="mt-4">
-            {menuItems.map((item, index) => (
-              <Link
-                key={index}
-                to={item.path}
-                className="flex items-center px-4 py-3 hover:bg-blue-500"
-              >
-                <span className="text-lg">{item.icon}</span>
-                {isHovered && <span className="ml-3">{item.name}</span>}
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        {/* Dynamic Content (Dashboard, Employees, etc.) */}
-        <div className="flex-1  overflow-auto">
-          <Outlet />
-        </div>
-      </div>
-
-      {/* Logout Confirmation Modal */}
-      {showLogoutModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h2 className="text-xl mb-4">Are you sure you want to log out?</h2>
-            <div className="flex justify-end space-x-4">
-              <button onClick={cancelLogout} className="px-4 py-2 bg-gray-300 rounded">
-                No
-              </button>
-              <button onClick={confirmLogout} className="px-4 py-2 bg-red-500 text-white rounded">
-                Yes
-              </button>
-            </div>
-          </div>
         </div>
       )}
     </div>
+  </div>
+
+  {/* Dynamic Content (Outlet) */}
+  <div className="flex-1 min-h-0 overflow-auto p-4">
+    <Outlet />
+  </div>
+
+  {/* Logout Modal */}
+  {showLogoutModal && (
+    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-xl mb-4">Are you sure you want to log out?</h2>
+        <div className="flex justify-end space-x-4">
+          <button onClick={cancelLogout} className="px-4 py-2 bg-gray-300 rounded">
+            No
+          </button>
+          <button
+            onClick={confirmLogout}
+            className="px-4 py-2 bg-red-500 text-white rounded"
+          >
+            Yes
+          </button>
+        </div>
+      </div>
+    </div>
+  )}
+</div>
+
   );
 };
 
-export default Sidebar;
+export default Navbar;

@@ -106,6 +106,7 @@ function Dashboard() {
           </div>
         </div>
       </div>
+<<<<<<< HEAD
       <div className="dashboard_content flex-row flex flex-4">
         <div className="date_task_right flex flex-col flex-1 m-1 w-full h-full bg-amber-50">
           <div className="callendar_container flex justify-center ">
@@ -140,6 +141,38 @@ function Dashboard() {
               >
                 Delete
               </button>
+=======
+      <div className='dashboard_content flex-row flex flex-4'>  
+        
+        <div className='date_task_right flex flex-1 m-1 w-full h-full bg-amber-50'>
+
+        </div>
+        <div className='left_container flex flex-2 m-1 w-full h-full bg-amber-50'>
+        <div className="flex justify-center items-center  bg-gray-100 space-x-8">
+           <div
+            className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+            onClick={() => navigate('/employees', { state: { user } })}
+          >
+            <p className="text-lg font-semibold text-center">
+              Total Employees: {employeeCount}
+            </p>
+          </div>
+            
+          <div
+            className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+            onClick={() => navigate('/department', { state: { user } })}
+          >
+            <p className="text-lg font-semibold text-center">
+              Total Departments: {departmentCount}
+            </p>
+          </div>
+          
+        </div>          
+            <div className='top_container flex flex-1 m-1 bg-amber-950'>
+            </div>
+            <div className='low_container flex flex-1 m-1 bg-amber-950'>
+
+>>>>>>> 74d65e410075c180c655b93e6d0ca7e0d8fb0cc1
             </div>
           </div>
         </div>
@@ -150,7 +183,59 @@ function Dashboard() {
           </div>
         </div>
       </div>
+<<<<<<< HEAD
     </div>
+=======
+    //</div>
+    // <div className="dashboard-container flex h-screen justify-center items-center bg-gray-100">
+      
+
+    //   {/* Main Dashboard Content */}
+    //   <div className="flex flex-col justify-center items-center gap-5">
+
+    //     {/* Dashboard Content */}
+    //     <div className="flex justify-center items-center  bg-gray-100 space-x-8">
+    //       <div
+    //         className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+    //         onClick={() => navigate('/employees', { state: { user } })}
+    //       >
+    //         <p className="text-lg font-semibold text-center">
+    //           Total Employees: {employeeCount}
+    //         </p>
+    //       </div>
+            
+    //       <div
+    //         className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+    //         onClick={() => navigate('/department', { state: { user } })}
+    //       >
+    //         <p className="text-lg font-semibold text-center">
+    //           Total Departments: {departmentCount}
+    //         </p>
+    //       </div>
+          
+    //     </div>
+    //     <div className="flex">
+    //     <div
+    //         className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+    //         onClick={() => navigate('/employees', { state: { user } })}
+    //       >
+    //         <p className="text-lg font-semibold text-center">
+    //           Total Employees: {employeeCount}
+    //         </p>
+    //       </div>
+            
+    //       <div
+    //         className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+    //         onClick={() => navigate('/department', { state: { user } })}
+    //       >
+    //         <p className="text-lg font-semibold text-center">
+    //           Total Departments: {departmentCount}
+    //         </p>
+    //       </div>
+    //     </div>
+    //   </div>
+    // </div>
+>>>>>>> 74d65e410075c180c655b93e6d0ca7e0d8fb0cc1
   );
 }
 

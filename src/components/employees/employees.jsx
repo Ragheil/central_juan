@@ -37,17 +37,26 @@ function Employees() {
     const url = editingEmployee
       ? 'http://localhost/central_juan/backend/employeesSide/update_employee.php'
       : 'http://localhost/central_juan/backend/employeesSide/add_employee.php';
-
     const method = editingEmployee ? 'PUT' : 'POST';
-
+  
     try {
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newEmployee),
       });
-
-      const data = await response.json();
+  
+      const text = await response.text();
+      let data;
+  
+      try {
+        data = JSON.parse(text);
+      } catch {
+        alert("Unexpected server error. Please try again.");
+        console.error("Server response:", text);
+        return;
+      }
+  
       if (data.success) {
         if (editingEmployee) {
           setEmployees(employees.map(emp => (emp.employee_id === newEmployee.employee_id ? newEmployee : emp)));
@@ -65,6 +74,7 @@ function Employees() {
       console.error("Error saving employee:", error);
     }
   };
+  
 
   const handleEditEmployee = (employee) => {
     setEditingEmployee(employee);

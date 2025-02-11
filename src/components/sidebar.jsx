@@ -11,7 +11,9 @@ const Sidebar = () => {
   const menuItems = [
     { path: "/dashboard", name: "Dashboard", icon: "📊" },
     { path: "/employees", name: "Employees", icon: "👥" },
-    {path: "/department", name: "Department", icon: "🏢"}
+    {path: "/department", name: "Department", icon: "🏢"},
+    { path: "/attendance", name: "attendance", icon: "📅" },
+   
   ];
 
   // Functions for logout modal

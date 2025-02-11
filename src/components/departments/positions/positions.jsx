@@ -18,22 +18,27 @@ function Positions() {
       const response = await fetch(
         `http://localhost/central_juan/backend/departments/positions/positions.php?department_id=${departmentId}`
       );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+
       const data = await response.json();
-      if (data.message) {
-        alert(data.message);
+      console.log("Fetched Data:", data);
+
+      if (!data.success) {
+        alert(data.message || "Error fetching positions.");
       } else {
-        setPositions(data);
+        setPositions(data.data || []);
       }
     } catch (error) {
-      console.error('Error fetching position data:', error);
-      alert('Error fetching position data. Please check your server or connection.');
+      console.error("Error fetching position data:", error);
+      alert("Error fetching position data. Please check your server or connection.");
     } finally {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     if (departmentId) fetchPositions();

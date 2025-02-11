@@ -16,24 +16,29 @@ function Positions() {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost/central_juan/backend/departments/positions/positions.php?department_id=${departmentId}`
+        `http://10.0.254.104/central_juan/backend/departments/positions/positions.php?department_id=${departmentId}`
       );
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+
       const data = await response.json();
-      if (data.message) {
-        alert(data.message);
+      console.log("Fetched Data:", data);
+
+      if (!data.success) {
+        alert(data.message || "Error fetching positions.");
       } else {
-        setPositions(data);
+        setPositions(data.data || []);
       }
     } catch (error) {
-      console.error('Error fetching position data:', error);
-      alert('Error fetching position data. Please check your server or connection.');
+      console.error("Error fetching position data:", error);
+      alert("Error fetching position data. Please check your server or connection.");
     } finally {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     if (departmentId) fetchPositions();
@@ -47,8 +52,8 @@ function Positions() {
     };
 
     const url = editingPosition
-      ? 'http://localhost/central_juan/backend/departments/positions/update_positions.php'
-      : 'http://localhost/central_juan/backend/departments/positions/add_positions.php';
+      ? 'http://10.0.254.104/central_juan/backend/departments/positions/update_positions.php'
+      : 'http://10.0.254.104/central_juan/backend/departments/positions/add_positions.php';
 
     const method = editingPosition ? 'PUT' : 'POST';
 
@@ -86,7 +91,7 @@ function Positions() {
 
     try {
       const response = await fetch(
-        `http://localhost/central_juan/backend/departments/positions/delete_positions.php?id=${position_id}`,
+        `http://10.0.254.104/central_juan/backend/departments/positions/delete_positions.php?id=${position_id}`,
         { method: 'DELETE' }
       );
 
@@ -104,59 +109,73 @@ function Positions() {
   };
 
   return (
-    <div>
-      <h1>Positions for Department: {departmentName} (ID: {departmentId})</h1>
-      <p>Role: {role || 'N/A'}</p>
+    <div className="p-6">
+      <h1 className="text-2xl font-semibold mb-4">Positions for Department: {departmentName} (ID: {departmentId})</h1>
+      <p className="mb-4">Role: {role || 'N/A'}</p>
 
+      {/* Add Position Button */}
       {role === 'ADMIN' && (
-        <button onClick={() => { setEditingPosition(null); setIsModalOpen(true); }}>
-          Add Position
+        <button
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 mb-4"
+          onClick={() => { setEditingPosition(null); setIsModalOpen(true); }}
+        >
+          + Add Position
         </button>
       )}
 
       {loading ? (
         <p>Loading positions...</p>
       ) : (
-        <div>
-          <table className="positions-table">
-            <thead>
+        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+          <table className="w-full border-collapse">
+            <thead className="bg-gray-300 text-gray-700">
               <tr>
-                <th>Position ID</th>
-                <th>Position Name</th>
-                <th>Actions</th>
+                <th className="p-3 text-left">Position ID</th>
+                <th className="p-3 text-left">Position Name</th>
+                <th className="p-3 text-left">Actions</th>
               </tr>
             </thead>
             <tbody>
               {positions.length > 0 ? positions.map(position => (
-                <tr key={position.position_id}>
-                  <td>{position.position_id}</td>
-                  <td>{position.position_name}</td>
-                  <td>
+                <tr key={position.position_id} className="border-t hover:bg-gray-100">
+                  <td className="p-3">{position.position_id}</td>
+                  <td className="p-3">{position.position_name}</td>
+                  <td className="p-3">
                     {role === 'ADMIN' && (
-                      <>
-                        <button onClick={() => handleEditPosition(position)}>Edit</button>
-                        <button onClick={() => handleDeletePosition(position.position_id)}>Delete</button>
-                      </>
+                      <div className="flex space-x-2">
+                        <button
+                          className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
+                          onClick={() => handleEditPosition(position)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+                          onClick={() => handleDeletePosition(position.position_id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     )}
                   </td>
                 </tr>
               )) : (
                 <tr>
-                  <td colSpan="3">No positions available for this department.</td>
+                  <td colSpan="3" className="text-center">No positions available for this department.</td>
                 </tr>
               )}
             </tbody>
           </table>
-
-          <PositionModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onSubmit={handleAddOrUpdatePosition}
-            position={editingPosition}
-            departmentId={departmentId}
-          />
         </div>
       )}
+
+      <PositionModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleAddOrUpdatePosition}
+        position={editingPosition}
+        departmentId={departmentId}
+      />
     </div>
   );
 }

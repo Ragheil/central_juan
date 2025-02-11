@@ -11,6 +11,8 @@ function Employees() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [positions, setPositions] = useState([]);
+
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -30,6 +32,62 @@ function Employees() {
 
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
+  };
+
+
+// Fetch positions
+useEffect(() => {
+  const fetchPositions = async () => {
+    try {
+      const response = await fetch('http://10.0.254.104/central_juan/backend/departments/positions/fetch_positions.php');
+      const data = await response.json();
+      console.log(data); // Log the data to see its structure
+      // Check if data is an array
+      if (Array.isArray(data)) {
+        setPositions(data);
+      } else {
+        console.error('Unexpected response format:', data);
+        setPositions([]); // Set to empty array if the format is not as expected
+      }
+    } catch (error) {
+      console.error('Error fetching positions:', error);
+      setPositions([]);
+    }
+  };
+
+  fetchPositions();
+}, []);
+
+
+  const handleEdit = (employee) => {
+    setEditingEmployee(employee);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (employeeId) => {
+    if (window.confirm("Are you sure you want to delete this employee?")) {
+      try {
+        const response = await fetch(
+          `http://10.0.254.104/central_juan/backend/employeesSide/delete_employee.php?id=${employeeId}`,
+          {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+  
+        if (!response.ok) {
+          throw new Error(`Error: ${response.statusText}`);
+        }
+  
+        const result = await response.json();
+        alert(result.message);
+      } catch (error) {
+        console.error("Error deleting employee:", error);
+        alert("Error deleting employee.");
+      }
+    }
   };
 
   const filteredEmployees = employees.filter(emp =>
@@ -102,10 +160,16 @@ function Employees() {
                   <td className="p-3">
                     {user?.role === 'ADMIN' && (
                       <div className="flex space-x-2">
-                        <button className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600">
+                       <button
+                          className="px-3 py-1 bg-yellow-500 text-white rounded-md hover:bg-yellow-600"
+                          onClick={() => handleEdit(employee)}
+                        >
                           Edit
                         </button>
-                        <button className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700">
+                        <button
+                          className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700"
+                          onClick={() => handleDelete(employee.employee_id)}
+                        >
                           Delete
                         </button>
                       </div>

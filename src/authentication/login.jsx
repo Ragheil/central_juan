@@ -17,7 +17,7 @@ function Login() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        'http://localhost/central_juan/backend/login.php',
+        'http://10.0.254.104/central_juan/backend/login.php',
         { username, password },
         { headers: { 'Content-Type': 'application/json' } }
       );

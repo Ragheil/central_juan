@@ -16,7 +16,7 @@ function Positions() {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost/central_juan/backend/departments/positions/positions.php?department_id=${departmentId}`
+        `http://10.0.254.104/central_juan/backend/departments/positions/positions.php?department_id=${departmentId}`
       );
 
       if (!response.ok) {
@@ -52,8 +52,8 @@ function Positions() {
     };
 
     const url = editingPosition
-      ? 'http://localhost/central_juan/backend/departments/positions/update_positions.php'
-      : 'http://localhost/central_juan/backend/departments/positions/add_positions.php';
+      ? 'http://10.0.254.104/central_juan/backend/departments/positions/update_positions.php'
+      : 'http://10.0.254.104/central_juan/backend/departments/positions/add_positions.php';
 
     const method = editingPosition ? 'PUT' : 'POST';
 
@@ -91,7 +91,7 @@ function Positions() {
 
     try {
       const response = await fetch(
-        `http://localhost/central_juan/backend/departments/positions/delete_positions.php?id=${position_id}`,
+        `http://10.0.254.104/central_juan/backend/departments/positions/delete_positions.php?id=${position_id}`,
         { method: 'DELETE' }
       );
 

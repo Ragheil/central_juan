@@ -15,7 +15,7 @@ function Employees() {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await fetch('http://localhost/central_juan/backend/employeesSide/employees.php');
+        const response = await fetch('http://10.0.254.104/central_juan/backend/employeesSide/employees.php');
         const data = await response.json();
         setEmployees(data);
       } catch (error) {

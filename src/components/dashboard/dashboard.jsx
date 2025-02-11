@@ -14,7 +14,7 @@ function Dashboard() {
       try {
         // Fetch employee count
         const employeeResponse = await fetch(
-          'http://localhost/central_juan/backend/employeesSide/employees.php?count=true'
+          'http://10.0.254.104/central_juan/backend/employeesSide/employees.php?count=true'
         );
         if (employeeResponse.ok) {
           const data = await employeeResponse.json();
@@ -26,7 +26,7 @@ function Dashboard() {
     
         // Fetch department count
         const departmentResponse = await fetch(
-          'http://localhost/central_juan/backend/departments/department.php?count=true'
+          'http://10.0.254.104/central_juan/backend/departments/department.php?count=true'
         );
         if (departmentResponse.ok) {
           const departmentData = await departmentResponse.json();

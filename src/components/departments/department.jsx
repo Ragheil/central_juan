@@ -16,7 +16,7 @@ function Departments() {
   const fetchDepartments = async () => {
     setLoading(true);
     try {
-      const response = await fetch('http://localhost/central_juan/backend/departments/department.php');
+      const response = await fetch('http://10.0.254.104/central_juan/backend/departments/department.php');
       const data = await response.json();
       if (data.message) {
         alert(data.message);
@@ -47,8 +47,8 @@ function Departments() {
 
   const handleAddOrUpdateDepartment = async (newDepartment) => {
     const url = editingDepartment
-      ? 'http://localhost/central_juan/backend/departments/update_department.php'
-      : 'http://localhost/central_juan/backend/departments/add_department.php';
+      ? 'http://10.0.254.104/central_juan/backend/departments/update_department.php'
+      : 'http://10.0.254.104/central_juan/backend/departments/add_department.php';
 
     const method = editingDepartment ? 'PUT' : 'POST';
 
@@ -83,7 +83,7 @@ function Departments() {
     if (!window.confirm('Are you sure you want to delete this department?')) return;
 
     try {
-      const response = await fetch(`http://localhost/central_juan/backend/departments/delete_department.php?id=${department_id}`, {
+      const response = await fetch(`http://10.0.254.104/central_juan/backend/departments/delete_department.php?id=${department_id}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
       });

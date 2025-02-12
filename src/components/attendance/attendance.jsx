@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 const Attendance = () => {
-  const [attendanceData, setAttendanceData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [attendanceData, setAttendanceData] = useState([]); // State to hold attendance data
+  const [loading, setLoading] = useState(true); // State to manage loading state
 
   useEffect(() => {
     const fetchAttendance = async () => {
@@ -11,29 +11,30 @@ const Attendance = () => {
         const data = await response.json();
 
         if (data.success) {
-          setAttendanceData(data.data);
+          setAttendanceData(data.data); // Set attendance data if fetch is successful
         } else {
-          alert(data.message || "Failed to fetch attendance data.");
+          alert(data.message || "Failed to fetch attendance data."); // Alert if fetch fails
         }
       } catch (error) {
-        alert("Error fetching attendance: " + error.message);
+        alert("Error fetching attendance: " + error.message); // Alert on error
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false after fetch
       }
     };
 
-    fetchAttendance();
+    fetchAttendance(); // Call the fetch function
   }, []);
 
   return (
     <div style={{ padding: "20px" }}>
       <h1>Attendance Records</h1>
       {loading ? (
-        <p>Loading...</p>
+        <p>Loading...</p> // Show loading message while fetching data
       ) : attendanceData.length > 0 ? (
         <table border="1" cellPadding="10" style={{ width: "100%" }}>
           <thead>
             <tr>
+              <th>Attendance ID</th> {/* New column for Attendance ID */}
               <th>Date</th>
               <th>Employee Name</th>
               <th>Time In (Morning)</th>
@@ -47,6 +48,7 @@ const Attendance = () => {
           <tbody>
             {attendanceData.map((item) => (
               <tr key={item.attendance_id}>
+                <td>{item.attendance_id}</td> {/* Display Attendance ID */}
                 <td>{item.attendance_date}</td>
                 <td>{item.employee_name}</td>
                 <td>{item.time_in_morning || "N/A"}</td>
@@ -60,7 +62,7 @@ const Attendance = () => {
           </tbody>
         </table>
       ) : (
-        <p>No attendance records available.</p>
+        <p>No attendance records available.</p> // Message if no records are found
       )}
     </div>
   );

@@ -39,7 +39,7 @@ const Navbar = () => {
 
     {/* Middle Section: Navigation Links */}
     <div className="flex justify-end flex-2 ml-4 mr-4">
-      <nav className="flex space-x-4 bg-gray-600 p-3 rounded-full">
+      <nav className="flex space-x-4 bg-gray-600 font-albert p-3 rounded-full">
         {menuItems.map((item) => (
           <Link
             key={item.path}
@@ -55,10 +55,9 @@ const Navbar = () => {
     </div>
 
     {/* Right Section: Settings Button */}
-    <div className="relative">
-      <button
+    <div className="">
+      <button className="bg-blue-500"
         onClick={toggleSettingsDropdown}
-        className="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded-full flex items-center"
       >
         <span>Settings</span>
       </button>

@@ -93,17 +93,17 @@ function Dashboard() {
         </div>
         <div className="right_head flex flex-1 flex-row m-1 w-full justify-end items-center">
           <div className="Employee_count flex-col flex flex-1 justify-end h-full m-1">
-            <div className="text-9xl flex justify-end">
+            <div className="text-9xl flex font-albert justify-end">
               {(employeeCount ?? 0).toString().padStart(2, "0")}
             </div>
-            <p className="text-3xl">Employee</p>
+            <p className="text-3xl font-albert">Employee</p>
           </div>
 
           <div className="deparment_count flex-col flex flex-1 justify-end h-full m-1">
-            <div className="text-9xl flex justify-end">
+            <div className="text-9xl font-albert flex justify-end">
               {(departmentCount ?? 0).toString().padStart(2, "0")}
             </div>
-            <p className="text-3xl">Department</p>
+            <p className="text-3xl font-albert">Department</p>
           </div>
         </div>
       </div>
@@ -112,21 +112,20 @@ function Dashboard() {
       <div className="dashboard_content flex flex-row flex-4">
         {/* Calendar & Task Section */}
         <div className="date_task_right flex flex-col flex-1 m-1 w-full bg-amber-50">
-          <div className="callendar_container flex justify-center">
+          <div className="callendar_container flex flex-1 bg-blue-500 justify-center items-center  ">
             <Calendar
               onChange={handleDateChange}
               value={date}
-              className="react-calendar"
-              tileClassName={({ date }) =>
-                tasks[date.toDateString()] ? "task-date" : ""
-              }
+              className="custom-calendar"
+              tileClassName={({ date }) => (tasks[date.toDateString()] ? "task-date" : "")}
             />
           </div>
+
 
           <div className="task_note_container p-4">
             <h2 className="text-lg font-bold">Task for {date.toDateString()}</h2>
             <textarea
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border-hidden rounded"
               rows="3"
               placeholder="Write your task here..."
               value={note}

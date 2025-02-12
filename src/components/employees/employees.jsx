@@ -15,7 +15,7 @@ function Employees() {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await fetch('http://localhost/central_juan/backend/employeesSide/employees.php');
+        const response = await fetch('http://10.0.254.104/central_juan/backend/employeesSide/employees.php');
         const data = await response.json();
         if (data.message) {
           alert(data.message);
@@ -35,8 +35,8 @@ function Employees() {
 
   const handleAddOrUpdateEmployee = async (newEmployee) => {
     const url = editingEmployee
-      ? 'http://localhost/central_juan/backend/employeesSide/update_employee.php'
-      : 'http://localhost/central_juan/backend/employeesSide/add_employee.php';
+      ? 'http://10.0.254.104/central_juan/backend/employeesSide/update_employee.php'
+      : 'http://10.0.254.104/central_juan/backend/employeesSide/add_employee.php';
     const method = editingEmployee ? 'PUT' : 'POST';
   
     try {
@@ -85,7 +85,7 @@ function Employees() {
     if (!window.confirm('Are you sure you want to delete this employee?')) return;
 
     try {
-      const response = await fetch(`http://localhost/central_juan/backend/employeesSide/delete_employee.php?id=${employee_id}`, {
+      const response = await fetch(`http://10.0.254.104/central_juan/backend/employeesSide/delete_employee.php?id=${employee_id}`, {
         method: 'DELETE',
       });
 

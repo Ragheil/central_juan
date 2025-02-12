@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import EmployeeModal from './EmployeeModal'; // Import the modal component
-//import '../../../Styles/components/employees.css';
 import '../../../Styles/globals.css';
 
 function Employees() {
@@ -39,17 +38,17 @@ function Employees() {
       ? 'http://10.0.254.104/central_juan/backend/employeesSide/update_employee.php'
       : 'http://10.0.254.104/central_juan/backend/employeesSide/add_employee.php';
     const method = editingEmployee ? 'PUT' : 'POST';
-  
+
     try {
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newEmployee),
       });
-  
+
       const text = await response.text();
       let data;
-  
+
       try {
         data = JSON.parse(text);
       } catch {
@@ -57,7 +56,7 @@ function Employees() {
         console.error("Server response:", text);
         return;
       }
-  
+
       if (data.success) {
         if (editingEmployee) {
           setEmployees(employees.map(emp => (emp.employee_id === newEmployee.employee_id ? newEmployee : emp)));
@@ -75,7 +74,6 @@ function Employees() {
       console.error("Error saving employee:", error);
     }
   };
-  
 
   const handleEditEmployee = (employee) => {
     setEditingEmployee(employee);
@@ -103,97 +101,67 @@ function Employees() {
   };
 
   return (
-
-    <div className='employee_container '>
-      <div className='employee_content '>
+    <div className='employee_container'>
+      
         <div className='employee_head'>
-          dkakd
+          {/* You can add a header or any other content you like here */}
+          <h1>Employee Management</h1>
         </div>
         <div className='employee_tableContainer'>
-          <thead className='employee_tableHeader '>
-            <tr>
-              <th>Employee ID</th>
-              <th>First Name</th>
-              <th>Middle Name</th>
-              <th>Last Name</th>
-              <th>Email</th>
-              <th>Contact Number</th>
-              <th>Date of Birth</th>
-              <th>Department Name</th>
-              <th>Position Name</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
+          {loading ? (
+            <p>Loading employees...</p>
+          ) : (
+            <table>
+              <thead className='employee_tableHeader '>
+                <tr>
+                  <th>Employee ID</th>
+                  <th>First Name</th>
+                  <th>Middle Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Contact Number</th>
+                  <th>Date of Birth</th>
+                  <th>Department Name</th>
+                  <th>Position Name</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {employees.map((employee) => (
+                  <tr key={employee.employee_id}>
+                    <td>{employee.employee_id}</td>
+                    <td>{employee.first_name}</td>
+                    <td>{employee.middle_name || 'N/A'}</td>
+                    <td>{employee.last_name}</td>
+                    <td>{employee.email}</td>
+                    <td>{employee.contact_number}</td>
+                    <td>{new Date(employee.date_of_birth).toLocaleDateString()}</td>
+                    <td>{employee.department_name || 'N/A'}</td>
+                    <td>{employee.position_name || 'N/A'}</td>
+                    <td>
+                      {user?.role === 'ADMIN' && (
+                        <>
+                          <button onClick={() => handleEditEmployee(employee)}>Edit</button>
+                          <button onClick={() => handleDeleteEmployee(employee.employee_id)}>Delete</button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
-      </div>
+      
+
+      {/* Modal for adding/editing employee */}
+      <EmployeeModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSubmit={handleAddOrUpdateEmployee}
+        employee={editingEmployee}
+      />
     </div>
-    
-//     <div>
-//       <h1>Employees</h1>
-//       <p>Welcome, {user?.username || 'Guest'} (Role: {user?.role || 'N/A'})</p>
-
-//       <br />
-//       {user?.role === 'ADMIN' && (
-//             <button onClick={() => { setEditingEmployee(null); setIsModalOpen(true); }}>Add Employee</button>
-//           )}
-// <br />
-//       {loading ? (
-//         <p>Loading employees...</p>
-//       ) : (
-//         <div>
-//           <table className="employee-table">
-//           <thead>
-//   <tr>
-//     <th>Employee ID</th>
-//     <th>First Name</th>
-//     <th>Middle Name</th>
-//     <th>Last Name</th>
-//     <th>Email</th>
-//     <th>Contact Number</th>
-//     <th>Date of Birth</th>
-//     <th>Department Name</th>
-//     <th>Position Name</th>
-//     <th>Actions</th>
-//   </tr>
-// </thead>
-// <tbody>
-//   {employees.map(employee => (
-//     <tr key={employee.employee_id}>
-//       <td>{employee.employee_id}</td>
-//       <td>{employee.first_name}</td>
-//       <td>{employee.middle_name || 'N/A'}</td>
-//       <td>{employee.last_name}</td>
-//       <td>{employee.email}</td>
-//       <td>{employee.contact_number}</td>
-//       <td>{new Date(employee.date_of_birth).toLocaleDateString()}</td>
-//       <td>{employee.department_name || 'N/A'}</td>
-//       <td>{employee.position_name || 'N/A'}</td>
-//       <td>
-//         {user?.role === 'ADMIN' && (
-//           <>
-//             <button onClick={() => handleEditEmployee(employee)}>Edit</button>
-//             <button onClick={() => handleDeleteEmployee(employee.employee_id)}>Delete</button>
-//           </>
-//         )}
-//       </td>
-//     </tr>
-//   ))}
-// </tbody>
-
-
-//           </table>
-
-
-
-//           <EmployeeModal
-//             isOpen={isModalOpen}
-//             onClose={() => setIsModalOpen(false)}
-//             onSubmit={handleAddOrUpdateEmployee}
-//             employee={editingEmployee}
-//           />
-//         </div>
-//       )}
-//     </div>
   );
 }
 

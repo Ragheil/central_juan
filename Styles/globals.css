@@ -10,14 +10,17 @@
     flex
     flex-col
     w-full
+    justify-center
     
 }
 
 .employee_container{
     @apply 
     flex 
+    flex-col
     w-full 
     h-full 
+
 }
 
 .employee_head{
@@ -32,25 +35,25 @@
     @apply
     flex
     flex-4
-    w-full
     h-full
-    
+    w-full
+    font-albert
+    flex-col
+    rounded-md
+    bg-zinc-600
 }
 
 .employee_tableHeader{
     @apply 
-    bg-neutral-600
     text-white
-    w-full
-    font-albert;
+
 }
 
-.employee_tableHeader th{ 
+.employee_tableHeader th, .employee_tableContainer td { 
     @apply 
     px-4
     py-2
     text-center
-    w-1/10;
+    w-1/10
+    text-white
 }
-
-

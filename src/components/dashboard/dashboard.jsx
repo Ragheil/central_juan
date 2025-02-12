@@ -80,7 +80,7 @@ function Dashboard() {
       {/* HEADER */}
       <div className="dashboard_head flex flex-1 flex-row">
         <div className="left_head flex flex-3 m-1 w-full">
-          <p className="font-[Albert_Sans] text-[50px]">
+          <p className="font-albert text-[50px]">
             Hello{" "}
             <span
               className={` ${

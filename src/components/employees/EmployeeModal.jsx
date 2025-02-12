@@ -101,14 +101,15 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
       <div className="modal-content bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-semibold mb-4">{employee ? 'Edit Employee' : 'Add Employee'}</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="employee_id"
-            placeholder="Employee ID (optional)"
-            value={newEmployee.employee_id}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+        <input
+          type="text"
+          name="employee_id"
+          placeholder="Employee ID (optional)"
+          value={newEmployee.employee_id}
+          onChange={handleChange}
+          disabled={!!employee} // Disable when editing
+          className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${employee ? 'bg-gray-200 cursor-not-allowed' : ''}`}
+        />  
           <input
             type="text"
             name="first_name"

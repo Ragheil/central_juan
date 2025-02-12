@@ -43,13 +43,17 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
     fetchDepartments();
   }, []);
 
-  // Fetch positions
+  // Fetch positions based on selected department
   useEffect(() => {
-    const fetchPositions = async () => {
+    const fetchPositions = async (departmentId) => {
+      if (!departmentId) {
+        setPositions([]); // Clear positions if no department is selected
+        return;
+      }
       try {
-        const response = await fetch('http://10.0.254.104/central_juan/backend/departments/positions/fetch_positions.php');
+        const response = await fetch(`http://10.0.254.104/central_juan/backend/departments/positions/fetch_positions.php?department_id=${departmentId}`);
         const data = await response.json();
-        console.log(data); // Log the data to see its structure
+        console.log('Fetched positions:', data); // Log the fetched positions
         if (Array.isArray(data)) {
           setPositions(data);
         } else {
@@ -62,12 +66,16 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
       }
     };
 
-    fetchPositions();
-  }, []);
+    fetchPositions(newEmployee.department_id);
+  }, [newEmployee.department_id]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setNewEmployee((prev) => ({ ...prev, [name]: value }));
+    setNewEmployee((prev) => {
+      const updatedEmployee = { ...prev, [name]: value };
+      console.log('Updated employee state:', updatedEmployee); // Log the updated state
+      return updatedEmployee;
+    });
   };
 
   const handleSubmit = (e) => {
@@ -107,7 +115,8 @@ const EmployeeModal = ({ isOpen, onClose, onSubmit, employee }) => {
             placeholder="Employee ID (optional)"
             value={newEmployee.employee_id}
             onChange={handleChange}
-            className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            disabled={!!employee} // Disable when editing
+            className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${employee ? 'bg-gray-200 cursor-not-allowed' : ''}`}
           />
           <input
             type="text"

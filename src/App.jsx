@@ -7,7 +7,7 @@ import Employees from './components/employees/employees';
 import Department from './components/departments/department';
 import Positions from './components/departments/positions/positions';
 import Attendance from './components/attendance/attendance';
-import '../Styles/App.css';
+import '../Styles/globals.css';
 
 function App() {
   return (

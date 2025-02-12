@@ -77,6 +77,7 @@ function Dashboard() {
 
   return (
     <div className="main_dashboard flex flex-col h-screen w-full">
+      {/* HEADER */}
       <div className="dashboard_head flex flex-1 flex-row">
         <div className="left_head flex flex-3 m-1 w-full">
           <p className="font-[Albert_Sans] text-[50px]">
@@ -106,10 +107,12 @@ function Dashboard() {
           </div>
         </div>
       </div>
-<<<<<<< HEAD
-      <div className="dashboard_content flex-row flex flex-4">
-        <div className="date_task_right flex flex-col flex-1 m-1 w-full h-full bg-amber-50">
-          <div className="callendar_container flex justify-center ">
+
+      {/* MAIN CONTENT */}
+      <div className="dashboard_content flex flex-row flex-4">
+        {/* Calendar & Task Section */}
+        <div className="date_task_right flex flex-col flex-1 m-1 w-full bg-amber-50">
+          <div className="callendar_container flex justify-center">
             <Calendar
               onChange={handleDateChange}
               value={date}
@@ -119,7 +122,8 @@ function Dashboard() {
               }
             />
           </div>
-          <div className="task_note_container  p-4">
+
+          <div className="task_note_container p-4">
             <h2 className="text-lg font-bold">Task for {date.toDateString()}</h2>
             <textarea
               className="w-full p-2 border rounded"
@@ -141,101 +145,42 @@ function Dashboard() {
               >
                 Delete
               </button>
-=======
-      <div className='dashboard_content flex-row flex flex-4'>  
-        
-        <div className='date_task_right flex flex-1 m-1 w-full h-full bg-amber-50'>
-
-        </div>
-        <div className='left_container flex flex-2 m-1 w-full h-full bg-amber-50'>
-        <div className="flex justify-center items-center  bg-gray-100 space-x-8">
-           <div
-            className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
-            onClick={() => navigate('/employees', { state: { user } })}
-          >
-            <p className="text-lg font-semibold text-center">
-              Total Employees: {employeeCount}
-            </p>
-          </div>
-            
-          <div
-            className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
-            onClick={() => navigate('/department', { state: { user } })}
-          >
-            <p className="text-lg font-semibold text-center">
-              Total Departments: {departmentCount}
-            </p>
-          </div>
-          
-        </div>          
-            <div className='top_container flex flex-1 m-1 bg-amber-950'>
-            </div>
-            <div className='low_container flex flex-1 m-1 bg-amber-950'>
-
->>>>>>> 74d65e410075c180c655b93e6d0ca7e0d8fb0cc1
             </div>
           </div>
+
+            <div className="temporary_buttons_ED flex flex-1 flex-row" >
+              <div className="flex justify-center items-center bg-gray-100 space-x-8">
+                <div className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+                  onClick={() => navigate("/employees", { state: { user } })}
+                >
+                  <p className="text-lg font-semibold text-center">
+                    Total Employees: {employeeCount}
+                  </p>
+                </div>
+
+                <div
+                  className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
+                  onClick={() => navigate("/department", { state: { user } })}
+                >
+                  <p className="text-lg font-semibold text-center">
+                    Total Departments: {departmentCount}
+                  </p>
+                </div>
+              </div>
+            </div>
         </div>
+
+        {/* Left Section (Employee & Department Stats) */}
         <div className="left_container flex flex-2 m-1 w-full h-full bg-amber-50">
+
+          {/* Extra Sections */}
           <div className="right_container flex w-full h-full flex-col">
             <div className="top_container flex flex-1 m-1 bg-amber-950"></div>
             <div className="low_container flex flex-1 m-1 bg-amber-950"></div>
           </div>
         </div>
       </div>
-<<<<<<< HEAD
     </div>
-=======
-    //</div>
-    // <div className="dashboard-container flex h-screen justify-center items-center bg-gray-100">
-      
-
-    //   {/* Main Dashboard Content */}
-    //   <div className="flex flex-col justify-center items-center gap-5">
-
-    //     {/* Dashboard Content */}
-    //     <div className="flex justify-center items-center  bg-gray-100 space-x-8">
-    //       <div
-    //         className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
-    //         onClick={() => navigate('/employees', { state: { user } })}
-    //       >
-    //         <p className="text-lg font-semibold text-center">
-    //           Total Employees: {employeeCount}
-    //         </p>
-    //       </div>
-            
-    //       <div
-    //         className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
-    //         onClick={() => navigate('/department', { state: { user } })}
-    //       >
-    //         <p className="text-lg font-semibold text-center">
-    //           Total Departments: {departmentCount}
-    //         </p>
-    //       </div>
-          
-    //     </div>
-    //     <div className="flex">
-    //     <div
-    //         className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
-    //         onClick={() => navigate('/employees', { state: { user } })}
-    //       >
-    //         <p className="text-lg font-semibold text-center">
-    //           Total Employees: {employeeCount}
-    //         </p>
-    //       </div>
-            
-    //       <div
-    //         className="bg-white p-8 rounded-2xl shadow-lg cursor-pointer hover:bg-gray-50"
-    //         onClick={() => navigate('/department', { state: { user } })}
-    //       >
-    //         <p className="text-lg font-semibold text-center">
-    //           Total Departments: {departmentCount}
-    //         </p>
-    //       </div>
-    //     </div>
-    //   </div>
-    // </div>
->>>>>>> 74d65e410075c180c655b93e6d0ca7e0d8fb0cc1
   );
 }
 

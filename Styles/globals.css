@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+
+@theme{
+    --font-albert: Albert, "sans-serif";
+}
+
+.employee_content{
+    @apply
+    flex
+    flex-col
+    w-full
+    
+}
+
+.employee_container{
+    @apply 
+    flex 
+    w-full 
+    h-full 
+}
+
+.employee_head{
+    @apply
+    flex
+    flex-1
+    w-full
+    bg-zinc-300;
+}
+
+.employee_tableContainer{
+    @apply
+    flex
+    flex-4
+    w-full
+    h-full
+    
+}
+
+.employee_tableHeader{
+    @apply 
+    bg-neutral-600
+    text-white
+    w-full
+    font-albert;
+}
+
+.employee_tableHeader th{ 
+    @apply 
+    px-4
+    py-2
+    text-center
+    w-1/10;
+}
+
+

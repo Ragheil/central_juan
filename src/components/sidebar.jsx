@@ -69,6 +69,22 @@ const Navbar = () => {
             ))}
           </nav>
         </div>
+    {/* Middle Section: Navigation Links */}
+    <div className="flex justify-end flex-2 ml-4 mr-4">
+      <nav className="flex space-x-4 bg-gray-600 font-albert p-3 rounded-full">
+        {menuItems.map((item) => (
+          <Link
+            key={item.path}
+            to={item.path}
+            className={`px-4 py-2 rounded-full text-white transition-all duration-300 ${
+              location.pathname === item.path ? "bg-black" : "bg-gray-600 hover:bg-gray-500"
+            }`}
+          >
+            {item.name}
+          </Link>
+        ))}
+      </nav>
+    </div>
 
         <div className="relative">
           <button

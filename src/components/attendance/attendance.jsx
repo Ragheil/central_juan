@@ -11,7 +11,7 @@ const Attendance = () => {
   const fetchAttendance = async () => {
     setLoading(true);
     try {
-      const response = await fetch("http://localhost/central_juan/backend/attendance/attendance.php");
+      const response = await fetch("http://10.0.254.104/central_juan/backend/attendance/attendance.php");
       const data = await response.json();
 
       if (data.success) {
@@ -33,7 +33,7 @@ const Attendance = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this record?")) {
       try {
-        const response = await fetch(`http://localhost/central_juan/backend/attendance/delete.php?id=${id}`, {
+        const response = await fetch(`http://10.0.254.104/central_juan/backend/attendance/delete.php?id=${id}`, {
           method: "DELETE",
         });
         const data = await response.json();
